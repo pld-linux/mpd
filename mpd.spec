@@ -5,6 +5,7 @@
 # - create default config 
 # - add logrotate
 Summary:	Music Player Daemon
+Summary(pl):	Music Player Daemon - demon odtwarzaj±cy muzykê
 Name:		mpd
 Version:	0.11.5
 Release:	0.1
@@ -29,7 +30,21 @@ BuildRequires:	zlib-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
-mpd
+Music Player Daemon (MPD) allows remote access for playing music (MP3,
+Ogg Vorbis, FLAC, AAC, Mod, and wave files) and managing playlists.
+MPD is designed for integrating a computer into a stereo system that
+provides control for music playback over a local network. It is also
+makes a great desktop music player, especially if you are a console
+junkie, like frontend options, or restart X often.
+
+%description -l pl
+Music Player Daemon (MPD) pozwala na zdalny dostêp do odtwarzania
+muzyki (plików MP3, Ogg Vorbis, FLAC, AAC, Mod i wave) oraz
+zarz±dzania playlistami. MPD jest zaprojektowany do integrowania
+komputera w system stereo umo¿liwiaj±cy sterowanie odtwarzaniem muzyki
+w sieci lokalnej. S³u¿y tak¿e za dobry odtwarzacz muzyki dla
+komputerów biurkowych, zw³aszcza dla mi³o¶ników konsoli, ró¿nych opcji
+frontendów albo czêsto restartuj±cych X.
 
 %prep
 %setup -q 
@@ -40,8 +55,6 @@ mpd
 
 %install
 rm -rf $RPM_BUILD_ROOT
-# create directories if necessary
-#install -d $RPM_BUILD_ROOT
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
@@ -59,6 +72,6 @@ rm -rf $RPM_BUILD_ROOT
 
 #%{_datadir}/%{name}
 
-# initscript and it's config
+# initscript and its config
 #%attr(754,root,root) /etc/rc.d/init.d/%{name}
 #%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/%{name}
