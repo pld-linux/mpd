@@ -66,13 +66,10 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS ChangeLog README TODO UPGRADING doc/COMMANDS doc/mpdconf.example
-
+%doc AUTHORS ChangeLog README TODO doc/mpdconf.example UPGRADING doc/COMMANDS
 %attr(755,root,root) %{_bindir}/*
 %{_mandir}/man1/mpd.1*
-%{_mandir}/man5/mpd*
-%dir %{_docdir}/%{name}
-%{_docdir}/%{name}/*
+%{_mandir}/man5/mpd.conf.5*
 
 #%{_datadir}/%{name}
 
