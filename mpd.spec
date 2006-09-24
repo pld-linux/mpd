@@ -2,31 +2,32 @@
 # - add initscript
 # - create user for daemon (group audio)
 # - add dir to store playlists and songs DB
-# - create default config 
+# - create default config
 # - add logrotate
 Summary:	Music Player Daemon
 Summary(pl):	Music Player Daemon - demon odtwarzaj±cy muzykê
 Name:		mpd
-Version:	0.11.5
+Version:	0.12.0
 Release:	0.1
-Epoch:		0
 License:	GPL
 Group:		Applications/Multimedia
-Source0:	http://mercury.chem.pitt.edu/~shank/%{name}-%{version}.tar.gz
-# Source0-md5:	1a9a1a9d31f00a43838b3752024f7ebe
+Source0:	http://musicpd.org/uploads/files/%{name}-%{version}.tar.bz2
+# Source0-md5:	4995b18764b4f92fad7bed9506635ec3
 URL:		http://www.musicpd.org/
 BuildRequires:	alsa-lib-devel
 BuildRequires:	audiofile-devel >= 0.1.7
 BuildRequires:	faad2-devel
 BuildRequires:	flac-devel >= 1.1.0
+#BuildRequires:	gcc-c++
 BuildRequires:	libao-devel >= 0.8.3
 BuildRequires:	libid3tag-devel
 BuildRequires:	libmad-devel
 BuildRequires:	libmikmod-devel
 BuildRequires:	libogg-devel
+BuildRequires:	libshout-devel
 BuildRequires:	libvorbis-devel
+BuildRequires:	pkgconfig >= 0.9.0
 BuildRequires:	zlib-devel
-#BuildRequires:	gcc-c++
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -47,7 +48,7 @@ komputerów biurkowych, zw³aszcza dla mi³o¶ników konsoli, ró¿nych opcji
 frontendów albo czêsto restartuj±cych X.
 
 %prep
-%setup -q 
+%setup -q
 
 %build
 %configure
@@ -69,6 +70,9 @@ rm -rf $RPM_BUILD_ROOT
 
 %attr(755,root,root) %{_bindir}/*
 %{_mandir}/man1/mpd.1*
+%{_mandir}/man5/mpd*
+%dir %{_docdir}/%{name}
+%{_docdir}/%{name}/*
 
 #%{_datadir}/%{name}
 
