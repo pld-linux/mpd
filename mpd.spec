@@ -4,6 +4,7 @@
 # - add dir to store playlists and songs DB
 # - create default config
 # - add logrotate
+# - add (?) support for pulseaudio, oggflac is disabled
 Summary:	Music Player Daemon
 Summary(pl):	Music Player Daemon - demon odtwarzaj±cy muzykê
 Name:		mpd
@@ -53,7 +54,8 @@ frontendów albo czêsto restartuj±cych X.
 %patch0 -p1
 
 %build
-%configure
+%configure \
+	--enable-ao
 %{__make}
 
 %install
