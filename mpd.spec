@@ -6,7 +6,7 @@
 # - add logrotate
 # - add (?) support for pulseaudio, oggflac is disabled
 Summary:	Music Player Daemon
-Summary(pl):	Music Player Daemon - demon odtwarzaj±cy muzykê
+Summary(pl.UTF-8):   Music Player Daemon - demon odtwarzajÄ…cy muzykÄ™
 Name:		mpd
 Version:	0.12.1
 Release:	2
@@ -40,14 +40,14 @@ provides control for music playback over a local network. It is also
 makes a great desktop music player, especially if you are a console
 junkie, like frontend options, or restart X often.
 
-%description -l pl
-Music Player Daemon (MPD) pozwala na zdalny dostêp do odtwarzania
-muzyki (plików MP3, Ogg Vorbis, FLAC, AAC, Mod i wave) oraz
-zarz±dzania playlistami. MPD jest zaprojektowany do integrowania
-komputera w system stereo umo¿liwiaj±cy sterowanie odtwarzaniem muzyki
-w sieci lokalnej. S³u¿y tak¿e za dobry odtwarzacz muzyki dla
-komputerów biurkowych, zw³aszcza dla mi³o¶ników konsoli, ró¿nych opcji
-frontendów albo czêsto restartuj±cych X.
+%description -l pl.UTF-8
+Music Player Daemon (MPD) pozwala na zdalny dostÄ™p do odtwarzania
+muzyki (plikÃ³w MP3, Ogg Vorbis, FLAC, AAC, Mod i wave) oraz
+zarzÄ…dzania playlistami. MPD jest zaprojektowany do integrowania
+komputera w system stereo umoÅ¼liwiajÄ…cy sterowanie odtwarzaniem muzyki
+w sieci lokalnej. SÅ‚uÅ¼y takÅ¼e za dobry odtwarzacz muzyki dla
+komputerÃ³w biurkowych, zwÅ‚aszcza dla miÅ‚oÅ›nikÃ³w konsoli, rÃ³Å¼nych opcji
+frontendÃ³w albo czÄ™sto restartujÄ…cych X.
 
 %prep
 %setup -q
