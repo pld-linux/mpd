@@ -6,7 +6,7 @@
 # - add logrotate
 # - add (?) support for pulseaudio, oggflac is disabled
 Summary:	Music Player Daemon
-Summary(pl.UTF-8):   Music Player Daemon - demon odtwarzający muzykę
+Summary(pl.UTF-8):	Music Player Daemon - demon odtwarzający muzykę
 Name:		mpd
 Version:	0.12.1
 Release:	2
