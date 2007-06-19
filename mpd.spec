@@ -27,8 +27,8 @@ BuildRequires:	libmikmod-devel
 BuildRequires:	libogg-devel
 BuildRequires:	libshout-devel
 BuildRequires:	libvorbis-devel
-BuildRequires:	pulseaudio-devel
 BuildRequires:	pkgconfig >= 0.9.0
+BuildRequires:	pulseaudio-devel
 BuildRequires:	zlib-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
