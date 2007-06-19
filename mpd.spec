@@ -4,7 +4,6 @@
 # - add dir to store playlists and songs DB
 # - create default config
 # - add logrotate
-# - add (?) support for pulseaudio, oggflac is disabled
 Summary:	Music Player Daemon
 Summary(pl.UTF-8):	Music Player Daemon - demon odtwarzający muzykę
 Name:		mpd
@@ -28,6 +27,7 @@ BuildRequires:	libmikmod-devel
 BuildRequires:	libogg-devel
 BuildRequires:	libshout-devel
 BuildRequires:	libvorbis-devel
+BuildRequires:	pulseaudio-devel
 BuildRequires:	pkgconfig >= 0.9.0
 BuildRequires:	zlib-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
