@@ -14,21 +14,22 @@ Group:		Applications/Multimedia
 Source0:	http://musicpd.org/uploads/files/%{name}-%{version}.tar.bz2
 # Source0-md5:	dbd219c8ba773bc9270e27bfafc798b5
 URL:		http://www.musicpd.org/
-BuildRequires:	alsa-lib-devel
+BuildRequires:	alsa-lib-devel >= 0.9.0
 BuildRequires:	audiofile-devel >= 0.1.7
+BuildRequires:	avahi-devel
 BuildRequires:	faad2-devel
 BuildRequires:	flac-devel >= 1.1.0
-#BuildRequires:	gcc-c++
+BuildRequires:	jack-audio-connection-kit-devel >= 0.4
 BuildRequires:	libao-devel >= 0.8.3
-BuildRequires:	libatomic_ops
 BuildRequires:	libid3tag-devel
 BuildRequires:	libmad-devel
-BuildRequires:	libmikmod-devel
+BuildRequires:	libmikmod-devel >= 3.1.7
 BuildRequires:	libmpcdec-devel
 BuildRequires:	libogg-devel
+BuildRequires:	libsamplerate-devel >= 0.0.15
 BuildRequires:	libshout-devel
 BuildRequires:	libvorbis-devel
-BuildRequires:	pkgconfig >= 0.9.0
+BuildRequires:	pkgconfig >= 1:0.9.0
 BuildRequires:	pulseaudio-devel
 BuildRequires:	zlib-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -54,7 +55,10 @@ frontendów albo często restartujących X.
 %setup -q
 
 %build
+# ac_cv_* hacks to avoid unwanted linking
 %configure \
+	ac_cv_lib_iconv_main=no \
+	ac_cv_lib_nsl_gethostbyname=no \
 	--enable-ao
 %{__make}
 
