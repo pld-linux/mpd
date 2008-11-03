@@ -1,18 +1,18 @@
 # TODO:
 # - add initscript
-# - create user for daemon (group audio)
 # - add dir to store playlists and songs DB
-# - create default config
 # - add logrotate
 Summary:	Music Player Daemon
+Summary(hu.UTF-8):	Music Player Daemon
 Summary(pl.UTF-8):	Music Player Daemon - demon odtwarzający muzykę
 Name:		mpd
 Version:	0.13.2
-Release:	1
+Release:	1.1
 License:	GPL v2+
 Group:		Applications/Multimedia
 Source0:	http://musicpd.org/uploads/files/%{name}-%{version}.tar.bz2
 # Source0-md5:	b461896369949ff3cff955692ead9f8b
+Source1:	%{name}.conf
 URL:		http://www.musicpd.org/
 BuildRequires:	alsa-lib-devel >= 0.9.0
 BuildRequires:	audiofile-devel >= 0.1.7
@@ -32,6 +32,8 @@ BuildRequires:	libvorbis-devel
 BuildRequires:	pkgconfig >= 1:0.9.0
 BuildRequires:	pulseaudio-devel
 BuildRequires:	zlib-devel
+Provides:	group(mpd)
+Provides:	user(mpd)
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -41,6 +43,14 @@ MPD is designed for integrating a computer into a stereo system that
 provides control for music playback over a local network. It is also
 makes a great desktop music player, especially if you are a console
 junkie, like frontend options, or restart X often.
+
+%description -l hu.UTF-8
+Music Player Daemon (MPD)-vel lehetővé válik távoli zenelejátszás
+(MP3, Ogg Vorbis, FLAC, AAC, Mod és wav fájlok) és lejátszási listák
+menedzselése. Az MPD a számítógépben egy zenelejátszó, amelyet
+irányíthatsz helyi hálózaton keresztül. Egyben egy zseniális desktop
+zenelejátszó is, különösen a konzol-mániásoknak, vagy azoknak, akik
+sűrűn indítják újra az X-et.
 
 %description -l pl.UTF-8
 Music Player Daemon (MPD) pozwala na zdalny dostęp do odtwarzania
@@ -67,9 +77,21 @@ rm -rf $RPM_BUILD_ROOT
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT%{_sysconfdir}
+install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
+
+%pre
+%groupadd -g 204 mpd
+%useradd -u 204 -r -d /home/services/mpd -s /bin/false -c "Music Player Daemon (MPD) user" -g audio -G mpd
+
+%postun
+if [ "$1" = "0" ]; then
+	%userremove mpd
+	%groupremove mpd
+fi
 
 
 %files
@@ -78,6 +100,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/*
 %{_mandir}/man1/mpd.1*
 %{_mandir}/man5/mpd.conf.5*
+%{_sysconfdir}/mpd.conf
 
 #%{_datadir}/%{name}
 
