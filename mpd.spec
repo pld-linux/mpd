@@ -1,5 +1,4 @@
 # TODO:
-# - add initscript
 # - add dir to store playlists and songs DB
 # - add logrotate
 Summary:	Music Player Daemon
@@ -13,6 +12,7 @@ Group:		Applications/Multimedia
 Source0:	http://musicpd.org/uploads/files/%{name}-%{version}.tar.bz2
 # Source0-md5:	b461896369949ff3cff955692ead9f8b
 Source1:	%{name}.conf
+Source2:	%{name}.init
 URL:		http://www.musicpd.org/
 BuildRequires:	alsa-lib-devel >= 0.9.0
 BuildRequires:	audiofile-devel >= 0.1.7
@@ -79,6 +79,7 @@ rm -rf $RPM_BUILD_ROOT
 	DESTDIR=$RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_sysconfdir}
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}
+install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d/mpd
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -86,6 +87,15 @@ rm -rf $RPM_BUILD_ROOT
 %pre
 %groupadd -g 204 mpd
 %useradd -u 204 -r -d /home/services/mpd -s /bin/false -c "Music Player Daemon (MPD) user" -g audio -G mpd
+
+%post
+/sbin/chkconfig --add mpd
+
+%preun
+if [ "$1" = "0" ]; then
+	%service mpd stop
+	/sbin/chkconfig --del httpd
+fi
 
 %postun
 if [ "$1" = "0" ]; then
@@ -101,6 +111,7 @@ fi
 %{_mandir}/man1/mpd.1*
 %{_mandir}/man5/mpd.conf.5*
 %{_sysconfdir}/mpd.conf
+%{_sysconfdir}/rc.d/init.d/mpd
 
 #%{_datadir}/%{name}
 
