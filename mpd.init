@@ -1,0 +1,60 @@
+#!/bin/sh
+#
+# chkconfig:	2345 85 15
+#
+# description:	Music Player Daemon
+#
+# processname:	mpd
+# pidfile:	/var/run/mpd/mpd.pid
+# config:	/etc/mpd.conf
+
+# Source function library
+. /etc/rc.d/init.d/functions
+
+start() {
+	# Check if the service is already running?
+	if [ ! -f /var/lock/subsys/mpd ]; then
+		msg_starting "mpd"
+		OPTIONS=""
+		daemon mpd
+		RETVAL=$?
+		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/mpd
+	else
+		msg_already_running "mpd"
+	fi
+}
+
+stop() {
+	if [ -f /var/lock/subsys/mpd ]; then
+		msg_stopping "mpd"
+		killproc mpd
+		rm -f /var/lock/subsys/mpd >/dev/null 2>&1
+	else
+		msg_not_running "mpd"
+	fi
+}
+
+RETVAL=0
+# See how we were called.
+case "$1" in
+  start)
+  	start
+	;;
+  stop)
+  	stop
+	;;
+  restart|force-reload)
+	stop
+	start
+	;;
+  status)
+	status mpd
+	exit $?
+	;;
+  *)
+	msg_usage "$0 {start|stop|restart|force-reload|status}"
+	exit 3
+esac
+
+exit $RETVAL
+
