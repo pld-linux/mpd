@@ -77,9 +77,10 @@ rm -rf $RPM_BUILD_ROOT
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{_sysconfdir}
+
+install -d $RPM_BUILD_ROOT{%{_sysconfdir},/etc/rc.d/init.d}
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}
-install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d/mpd
+install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/mpd
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -108,13 +109,7 @@ fi
 %defattr(644,root,root,755)
 %doc AUTHORS ChangeLog README TODO doc/mpdconf.example UPGRADING doc/COMMANDS
 %attr(755,root,root) %{_bindir}/*
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/mpd.conf
+%attr(754,root,root) /etc/rc.d/init.d/mpd
 %{_mandir}/man1/mpd.1*
 %{_mandir}/man5/mpd.conf.5*
-%{_sysconfdir}/mpd.conf
-%{_sysconfdir}/rc.d/init.d/mpd
-
-#%{_datadir}/%{name}
-
-# initscript and its config
-#%attr(754,root,root) /etc/rc.d/init.d/%{name}
-#%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/%{name}
