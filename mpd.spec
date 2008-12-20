@@ -5,19 +5,19 @@ Summary:	Music Player Daemon
 Summary(hu.UTF-8):	Music Player Daemon
 Summary(pl.UTF-8):	Music Player Daemon - demon odtwarzający muzykę
 Name:		mpd
-Version:	0.13.2
-Release:	1.1
+Version:	0.14_beta3
+Release:	1
 License:	GPL v2+
 Group:		Applications/Multimedia
-Source0:	http://musicpd.org/uploads/files/%{name}-%{version}.tar.bz2
-# Source0-md5:	b461896369949ff3cff955692ead9f8b
+Source0:	http://downloads.sourceforge.net/musicpd/mpd-0.14_beta3.tar.bz2
+# Source0-md5:	02320f13de6a84b53343f3f451c53ed1
 Source1:	%{name}.conf
 Source2:	%{name}.init
 URL:		http://www.musicpd.org/
 BuildRequires:	alsa-lib-devel >= 0.9.0
 BuildRequires:	audiofile-devel >= 0.1.7
 BuildRequires:	avahi-devel
-BuildRequires:	faad2-devel
+BuildRequires:	faad2-devel >= 2.6.1
 BuildRequires:	flac-devel >= 1.1.0
 BuildRequires:	jack-audio-connection-kit-devel >= 0.4
 BuildRequires:	libao-devel >= 0.8.3
@@ -62,7 +62,7 @@ komputerów biurkowych, zwłaszcza dla miłośników konsoli, różnych opcji
 frontendów albo często restartujących X.
 
 %prep
-%setup -q
+%setup -q -n %{name}-0.14~beta3
 
 %build
 # ac_cv_* hacks to avoid unwanted linking
@@ -87,7 +87,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %pre
 %groupadd -g 204 mpd
-%useradd -u 204 -r -d /home/services/mpd -s /bin/false -c "Music Player Daemon (MPD) user" -g audio -G mpd
+%useradd -u 204 -r -d /home/services/mpd -s /bin/false -g audio -G mpd
 
 %post
 /sbin/chkconfig --add mpd
@@ -107,7 +107,7 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS ChangeLog README TODO doc/mpdconf.example UPGRADING doc/COMMANDS
+%doc AUTHORS README TODO doc/mpdconf.example UPGRADING
 %attr(755,root,root) %{_bindir}/*
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/mpd.conf
 %attr(754,root,root) /etc/rc.d/init.d/mpd
