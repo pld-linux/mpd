@@ -1,12 +1,13 @@
 # TODO:
 # - add dir to store playlists and songs DB
 # - add logrotate
+%define beta beta3
 Summary:	Music Player Daemon
 Summary(hu.UTF-8):	Music Player Daemon
 Summary(pl.UTF-8):	Music Player Daemon - demon odtwarzający muzykę
 Name:		mpd
-Version:	0.14_beta3
-Release:	1
+Version:	0.14
+Release:	0.%{beta}.1
 License:	GPL v2+
 Group:		Applications/Multimedia
 Source0:	http://downloads.sourceforge.net/musicpd/mpd-0.14_beta3.tar.bz2
@@ -62,7 +63,7 @@ komputerów biurkowych, zwłaszcza dla miłośników konsoli, różnych opcji
 frontendów albo często restartujących X.
 
 %prep
-%setup -q -n %{name}-0.14~beta3
+%setup -q -n %{name}-%{version}~%{beta}
 
 %build
 # ac_cv_* hacks to avoid unwanted linking
@@ -87,7 +88,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %pre
 %groupadd -g 204 mpd
-%useradd -u 204 -r -d /home/services/mpd -s /bin/false -g audio -G mpd
+%useradd -u 204 -r -d /home/services/mpd -s /bin/false -c "Music Player Daemon (MPD) user" -g audio -G mpd mpd
 
 %post
 /sbin/chkconfig --add mpd
@@ -107,7 +108,7 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS README TODO doc/mpdconf.example UPGRADING
+%doc AUTHORS NEWS README TODO doc/mpdconf.example UPGRADING doc/protocol.html
 %attr(755,root,root) %{_bindir}/*
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/mpd.conf
 %attr(754,root,root) /etc/rc.d/init.d/mpd
