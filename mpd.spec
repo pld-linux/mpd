@@ -1,24 +1,24 @@
 # TODO:
 # - add dir to store playlists and songs DB
 # - add logrotate
-%define beta beta3
 Summary:	Music Player Daemon
 Summary(hu.UTF-8):	Music Player Daemon
 Summary(pl.UTF-8):	Music Player Daemon - demon odtwarzający muzykę
 Name:		mpd
 Version:	0.14
-Release:	0.%{beta}.1
+Release:	0.1
 License:	GPL v2+
 Group:		Applications/Multimedia
-Source0:	http://downloads.sourceforge.net/musicpd/mpd-0.14_beta3.tar.bz2
-# Source0-md5:	02320f13de6a84b53343f3f451c53ed1
+Source0:	http://dl.sourceforge.net/musicpd/%{name}-%{version}.tar.bz2
+# Source0-md5:	ee282390146ead636f3d992399ed3c20
 Source1:	%{name}.conf
 Source2:	%{name}.init
 URL:		http://www.musicpd.org/
 BuildRequires:	alsa-lib-devel >= 0.9.0
 BuildRequires:	audiofile-devel >= 0.1.7
 BuildRequires:	avahi-devel
-BuildRequires:	faad2-devel >= 2.6.1
+# imho doesn't need ">= 2.6.1" to faad2-devel
+BuildRequires:	faad2-devel
 BuildRequires:	flac-devel >= 1.1.0
 BuildRequires:	jack-audio-connection-kit-devel >= 0.4
 BuildRequires:	libao-devel >= 0.8.3
@@ -63,7 +63,7 @@ komputerów biurkowych, zwłaszcza dla miłośników konsoli, różnych opcji
 frontendów albo często restartujących X.
 
 %prep
-%setup -q -n %{name}-%{version}~%{beta}
+%setup -q 
 
 %build
 # ac_cv_* hacks to avoid unwanted linking
@@ -108,7 +108,7 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS NEWS README TODO doc/mpdconf.example UPGRADING doc/protocol.html
+%doc AUTHORS NEWS README TODO doc/mpdconf.example UPGRADING doc/protocol.xml
 %attr(755,root,root) %{_bindir}/*
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/mpd.conf
 %attr(754,root,root) /etc/rc.d/init.d/mpd
