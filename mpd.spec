@@ -63,7 +63,7 @@ komputerów biurkowych, zwłaszcza dla miłośników konsoli, różnych opcji
 frontendów albo często restartujących X.
 
 %prep
-%setup -q 
+%setup -q
 
 %build
 # ac_cv_* hacks to avoid unwanted linking
@@ -96,7 +96,7 @@ rm -rf $RPM_BUILD_ROOT
 %preun
 if [ "$1" = "0" ]; then
 	%service mpd stop
-	/sbin/chkconfig --del httpd
+	/sbin/chkconfig --del mpd
 fi
 
 %postun
@@ -104,7 +104,6 @@ if [ "$1" = "0" ]; then
 	%userremove mpd
 	%groupremove mpd
 fi
-
 
 %files
 %defattr(644,root,root,755)
