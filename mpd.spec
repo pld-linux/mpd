@@ -1,6 +1,11 @@
 # TODO:
 # - add dir to store playlists and songs DB
 # - add logrotate
+#
+# Conditional build:
+%bcond_with	mod		# enable MOD support
+%bcond_without	pulse		# disable PulseAudio support
+#
 Summary:	Music Player Daemon
 Summary(hu.UTF-8):	Music Player Daemon
 Summary(pl.UTF-8):	Music Player Daemon - demon odtwarzający muzykę
@@ -17,21 +22,25 @@ URL:		http://www.musicpd.org/
 BuildRequires:	alsa-lib-devel >= 0.9.0
 BuildRequires:	audiofile-devel >= 0.1.7
 BuildRequires:	avahi-devel
+BuildRequires:	curl-devel
 # imho doesn't need ">= 2.6.1" to faad2-devel
 BuildRequires:	faad2-devel
+BuildRequires:	ffmpeg-devel
 BuildRequires:	flac-devel >= 1.1.0
+BuildRequires:	glib2-devel
 BuildRequires:	jack-audio-connection-kit-devel >= 0.4
+BuildRequires:	lame-libs-devel
 BuildRequires:	libao-devel >= 0.8.3
 BuildRequires:	libid3tag-devel
 BuildRequires:	libmad-devel
-BuildRequires:	libmikmod-devel >= 3.1.7
+%{?with_mod:BuildRequires:	libmikmod-devel >= 3.1.7}
 BuildRequires:	libmpcdec-devel
 BuildRequires:	libogg-devel
 BuildRequires:	libsamplerate-devel >= 0.0.15
 BuildRequires:	libshout-devel
 BuildRequires:	libvorbis-devel
 BuildRequires:	pkgconfig >= 1:0.9.0
-BuildRequires:	pulseaudio-devel
+%{?with_pulse:BuildRequires:	pulseaudio-devel}
 BuildRequires:	zlib-devel
 Provides:	group(mpd)
 Provides:	user(mpd)
@@ -70,18 +79,26 @@ frontendów albo często restartujących X.
 %configure \
 	ac_cv_lib_iconv_main=no \
 	ac_cv_lib_nsl_gethostbyname=no \
+	%{!?with_pulse:--disable-pulse} \
+	%{?with_mod:--enable-mod} \
 	--enable-ao
 %{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT{%{_sysconfdir},/etc/rc.d/init.d} \
+	$RPM_BUILD_ROOT{/var/lib/mpd/playlists,/var/log/mpd,/var/run/mpd}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-install -d $RPM_BUILD_ROOT{%{_sysconfdir},/etc/rc.d/init.d}
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/mpd
+
+touch $RPM_BUILD_ROOT/var/lib/mpd/mpd.db
+touch $RPM_BUILD_ROOT/var/log/mpd/mpd.error
+touch $RPM_BUILD_ROOT/var/log/mpd/mpd.log
+touch $RPM_BUILD_ROOT/var/run/mpd/mpdstate
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -91,6 +108,13 @@ rm -rf $RPM_BUILD_ROOT
 %useradd -u 204 -r -d /home/services/mpd -s /bin/false -c "Music Player Daemon (MPD) user" -g audio -G mpd mpd
 
 %post
+for f in mpd.log mpd.error; do
+	if [ ! -f /var/log/%{name}/$f ]; then
+		touch /var/log/%{name}/$f
+		chown mpd:mpd /var/log/%{name}/$f
+		chmod 644 /var/log/%{name}/$f
+	fi
+done
 /sbin/chkconfig --add mpd
 
 %preun
@@ -111,5 +135,13 @@ fi
 %attr(755,root,root) %{_bindir}/*
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/mpd.conf
 %attr(754,root,root) /etc/rc.d/init.d/mpd
+%dir %attr(770,root,mpd) /var/lib/%{name}
+%dir %attr(770,root,mpd) /var/lib/%{name}/playlists
+%dir %attr(751,root,root) /var/log/%{name}
+%dir %attr(770,root,mpd) /var/run/%{name}
+%attr(644,mpd,mpd) %ghost /var/lib/%{name}/mpd.db
+%attr(644,mpd,mpd) %ghost /var/log/%{name}/mpd.error
+%attr(644,mpd,mpd) %ghost /var/log/%{name}/mpd.log
+%attr(644,mpd,mpd) %ghost /var/run/%{name}/mpdstate
 %{_mandir}/man1/mpd.1*
 %{_mandir}/man5/mpd.conf.5*
