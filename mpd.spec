@@ -1,5 +1,4 @@
 # TODO:
-# - add dir to store playlists and songs DB
 # - add logrotate
 #
 # Conditional build:
