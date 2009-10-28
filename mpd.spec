@@ -2,7 +2,7 @@
 # - add logrotate
 #
 # Conditional build:
-%bcond_with	mod		# enable MOD support
+%bcond_without	mod		# enable MOD support
 %bcond_without	pulse		# disable PulseAudio support
 #
 Summary:	Music Player Daemon
@@ -21,18 +21,24 @@ URL:		http://www.musicpd.org/
 BuildRequires:	alsa-lib-devel >= 0.9.0
 BuildRequires:	audiofile-devel >= 0.1.7
 BuildRequires:	avahi-devel
+BuildRequires:	avahi-glib-devel
+BuildRequires:	bzip2-devel
 BuildRequires:	curl-devel
-# imho doesn't need ">= 2.6.1" to faad2-devel
-BuildRequires:	faad2-devel
+BuildRequires:	doxygen
+BuildRequires:	faad2-devel >= 2.6.1-3
 BuildRequires:	ffmpeg-devel
 BuildRequires:	flac-devel >= 1.1.0
+BuildRequires:	fluidsynth-devel
 BuildRequires:	glib2-devel
 BuildRequires:	jack-audio-connection-kit-devel >= 0.4
 BuildRequires:	lame-libs-devel
 BuildRequires:	libao-devel >= 0.8.3
+BuildRequires:	libcdio-devel
 BuildRequires:	libid3tag-devel
 BuildRequires:	libmad-devel
 %{?with_mod:BuildRequires:	libmikmod-devel >= 3.1.7}
+BuildRequires:	libmms
+BuildRequires:	libmodplug-devel
 BuildRequires:	libmpcdec-devel
 BuildRequires:	libogg-devel
 BuildRequires:	libsamplerate-devel >= 0.0.15
@@ -40,7 +46,12 @@ BuildRequires:	libshout-devel
 BuildRequires:	libvorbis-devel
 BuildRequires:	pkgconfig >= 1:0.9.0
 %{?with_pulse:BuildRequires:	pulseaudio-devel}
+BuildRequires:	sqlite3-devel
+BuildRequires:	wavpack-devel
+BuildRequires:	wildmidi-devel
+BuildRequires:	xmlto
 BuildRequires:	zlib-devel
+BuildRequires:	zziplib-devel
 Provides:	group(mpd)
 Provides:	user(mpd)
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -79,8 +90,33 @@ frontendów albo często restartujących X.
 	ac_cv_lib_iconv_main=no \
 	ac_cv_lib_nsl_gethostbyname=no \
 	%{!?with_pulse:--disable-pulse} \
-	%{?with_mod:--enable-mod} \
-	--enable-ao
+	%{?with_mod:--enable-mikmod} \
+	--disable-sidplay \
+	--enable-alsa \
+	--enable-ao \
+	--enable-bzip2 \
+	--enable-curl \
+	--enable-documentation \
+	--enable-ffmpeg \
+	--enable-fluidsynth \
+	--enable-httpd-output \
+	--enable-iso9660 \
+	--enable-jack \
+	--enable-lame-encoder \
+	--enable-lastfm \
+	--enable-lsr \
+	--enable-mad \
+	--enable-mms \
+	--enable-modplug \
+	--enable-mvp \
+	--enable-shout \
+	--enable-sqlite \
+	--enable-vorbis-encoder \
+	--enable-wavpack \
+	--enable-wildmidi \
+	--enable-zip \
+	--with-zeroconf=avahi \
+	--without-tremor 
 %{__make}
 
 %install
@@ -98,6 +134,8 @@ touch $RPM_BUILD_ROOT/var/lib/mpd/mpd.db
 touch $RPM_BUILD_ROOT/var/log/mpd/mpd.error
 touch $RPM_BUILD_ROOT/var/log/mpd/mpd.log
 touch $RPM_BUILD_ROOT/var/run/mpd/mpdstate
+
+rm -rf $RPM_BUILD_ROOT/usr/share/doc/mpd
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -130,7 +168,7 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS NEWS README doc/mpdconf.example UPGRADING doc/protocol.xml
+%doc AUTHORS NEWS README doc/mpdconf.example UPGRADING doc/api doc/developer doc/protocol doc/sticker doc/user
 %attr(755,root,root) %{_bindir}/*
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/mpd.conf
 %attr(754,root,root) /etc/rc.d/init.d/mpd
