@@ -25,7 +25,7 @@ BuildRequires:	avahi-glib-devel
 BuildRequires:	bzip2-devel
 BuildRequires:	curl-devel
 BuildRequires:	doxygen
-BuildRequires:	faad2-devel >= 2.6.1-3
+BuildRequires:	faad2-devel >= 2.6.1-5
 BuildRequires:	ffmpeg-devel
 BuildRequires:	flac-devel >= 1.1.0
 BuildRequires:	fluidsynth-devel
