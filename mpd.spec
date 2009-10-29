@@ -20,7 +20,6 @@ Source2:	%{name}.init
 URL:		http://www.musicpd.org/
 BuildRequires:	alsa-lib-devel >= 0.9.0
 BuildRequires:	audiofile-devel >= 0.1.7
-BuildRequires:	avahi-devel
 BuildRequires:	avahi-glib-devel
 BuildRequires:	bzip2-devel
 BuildRequires:	curl-devel
@@ -37,7 +36,7 @@ BuildRequires:	libcdio-devel
 BuildRequires:	libid3tag-devel
 BuildRequires:	libmad-devel
 %{?with_mod:BuildRequires:	libmikmod-devel >= 3.1.7}
-BuildRequires:	libmms
+BuildRequires:	libmms-devel
 BuildRequires:	libmodplug-devel
 BuildRequires:	libmpcdec-devel
 BuildRequires:	libogg-devel
