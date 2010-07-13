@@ -3,7 +3,7 @@
 #
 # Conditional build:
 %bcond_without	mod		# enable MOD support
-%bcond_without	pulse		# disable PulseAudio support
+%bcond_without	pulseaudio	# disable PulseAudio support
 #
 Summary:	Music Player Daemon
 Summary(hu.UTF-8):	Music Player Daemon
@@ -45,7 +45,7 @@ BuildRequires:	libsamplerate-devel >= 0.0.15
 BuildRequires:	libshout-devel
 BuildRequires:	libvorbis-devel
 BuildRequires:	pkgconfig >= 1:0.9.0
-%{?with_pulse:BuildRequires:	pulseaudio-devel}
+%{?with_pulseaudio:BuildRequires:	pulseaudio-devel}
 BuildRequires:	sqlite3-devel
 BuildRequires:	wavpack-devel
 BuildRequires:	wildmidi-devel
@@ -89,7 +89,7 @@ frontendów albo często restartujących X.
 %configure \
 	ac_cv_lib_iconv_main=no \
 	ac_cv_lib_nsl_gethostbyname=no \
-	%{!?with_pulse:--disable-pulse} \
+	%{!?with_pulseaudio:--disable-pulse} \
 	%{?with_mod:--enable-mikmod} \
 	--disable-sidplay \
 	--enable-alsa \
