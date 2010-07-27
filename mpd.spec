@@ -5,16 +5,17 @@
 %bcond_without	mod		# enable MOD support
 %bcond_without	pulseaudio	# disable PulseAudio support
 #
+%define		_alpha	alpha2
 Summary:	Music Player Daemon
 Summary(hu.UTF-8):	Music Player Daemon
 Summary(pl.UTF-8):	Music Player Daemon - demon odtwarzający muzykę
 Name:		mpd
-Version:	0.15.12
-Release:	1
+Version:	0.16
+Release:	0.%{_alpha}.1
 License:	GPL v2+
 Group:		Applications/Multimedia
-Source0:	http://downloads.sourceforge.net/musicpd/%{name}-%{version}.tar.bz2
-# Source0-md5:	b00b289a20ecd9accfd4972d6395135c
+Source0:	http://downloads.sourceforge.net/musicpd/%{name}-%{version}_%{_alpha}.tar.bz2
+# Source0-md5:	5dfac4bdc3ab00c0676c3a5332da2cc2
 Source1:	%{name}.conf
 Source2:	%{name}.init
 URL:		http://www.musicpd.org/
@@ -82,7 +83,7 @@ komputerów biurkowych, zwłaszcza dla miłośników konsoli, różnych opcji
 frontendów albo często restartujących X.
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{version}~%{_alpha}
 
 %build
 # ac_cv_* hacks to avoid unwanted linking
@@ -169,7 +170,7 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS NEWS README doc/mpdconf.example UPGRADING doc/api doc/developer doc/protocol doc/sticker doc/user
+%doc AUTHORS NEWS README doc/mpdconf.example UPGRADING doc/api doc/developer doc/protocol doc/user
 %attr(755,root,root) %{_bindir}/*
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/mpd.conf
 %attr(754,root,root) /etc/rc.d/init.d/mpd
