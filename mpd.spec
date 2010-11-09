@@ -5,7 +5,7 @@
 %bcond_without	mod		# enable MOD support
 %bcond_without	pulseaudio	# disable PulseAudio support
 #
-%define		_alpha	alpha2
+%define		_alpha	alpha4
 Summary:	Music Player Daemon
 Summary(hu.UTF-8):	Music Player Daemon
 Summary(pl.UTF-8):	Music Player Daemon - demon odtwarzający muzykę
@@ -15,7 +15,7 @@ Release:	0.%{_alpha}.1
 License:	GPL v2+
 Group:		Applications/Multimedia
 Source0:	http://downloads.sourceforge.net/musicpd/%{name}-%{version}_%{_alpha}.tar.bz2
-# Source0-md5:	5dfac4bdc3ab00c0676c3a5332da2cc2
+# Source0-md5:	58f5b0c4c7a14b07c42905c1fda8389e
 Source1:	%{name}.conf
 Source2:	%{name}.init
 URL:		http://www.musicpd.org/
