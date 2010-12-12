@@ -1,4 +1,3 @@
-# TODO:
 # - add logrotate
 #
 # Conditional build:
@@ -9,15 +8,16 @@ Summary:	Music Player Daemon
 Summary(hu.UTF-8):	Music Player Daemon
 Summary(pl.UTF-8):	Music Player Daemon - demon odtwarzający muzykę
 Name:		mpd
-Version:	0.15.15
-Release:	1
+Version:	0.16
+Release:	0.1
 License:	GPL v2+
 Group:		Applications/Multimedia
 Source0:	http://downloads.sourceforge.net/musicpd/%{name}-%{version}.tar.bz2
-# Source0-md5:	af0972af6237771acc420d2452fa627a
+# Source0-md5:	3fc8ccc4488cbaadc1a10f415eada35f
 Source1:	%{name}.conf
 Source2:	%{name}.init
 URL:		http://www.musicpd.org/
+BuildRequires:	OpenAL-devel
 BuildRequires:	alsa-lib-devel >= 0.9.0
 BuildRequires:	audiofile-devel >= 0.1.7
 BuildRequires:	avahi-glib-devel
@@ -28,7 +28,7 @@ BuildRequires:	faad2-devel >= 2.6.1-5
 BuildRequires:	ffmpeg-devel
 BuildRequires:	flac-devel >= 1.1.0
 BuildRequires:	fluidsynth-devel
-BuildRequires:	glib2-devel
+BuildRequires:	glib2-devel >= 2.12
 BuildRequires:	jack-audio-connection-kit-devel >= 0.4
 BuildRequires:	lame-libs-devel
 BuildRequires:	libao-devel >= 0.8.3
@@ -47,6 +47,7 @@ BuildRequires:	libvorbis-devel
 BuildRequires:	pkgconfig >= 1:0.9.0
 %{?with_pulseaudio:BuildRequires:	pulseaudio-devel}
 BuildRequires:	sqlite3-devel
+BuildRequires:	twolame-devel
 BuildRequires:	wavpack-devel
 BuildRequires:	wildmidi-devel
 BuildRequires:	xmlto
@@ -94,6 +95,7 @@ frontendów albo często restartujących X.
 	--disable-sidplay \
 	--enable-alsa \
 	--enable-ao \
+	--enable-audiofile \
 	--enable-bzip2 \
 	--enable-cue \
 	--enable-curl \
@@ -110,12 +112,17 @@ frontendów albo często restartujących X.
 	--enable-mms \
 	--enable-modplug \
 	--enable-mvp \
+	--enable-openal \
+	--enable-pipe-output \
+	--enable-recorder-output \
 	--enable-shout \
 	--enable-sqlite \
+	--enable-twolame-encoder \
 	--enable-vorbis-encoder \
+	--enable-wave-encoder \
 	--enable-wavpack \
 	--enable-wildmidi \
-	--enable-zip \
+	--enable-zzip \
 	--with-zeroconf=avahi \
 	--without-tremor
 %{__make}
@@ -132,9 +139,9 @@ install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/mpd
 
 touch $RPM_BUILD_ROOT/var/lib/mpd/mpd.db
-touch $RPM_BUILD_ROOT/var/log/mpd/mpd.error
+touch $RPM_BUILD_ROOT/var/lib/mpd/mpdstate
+touch $RPM_BUILD_ROOT/var/lib/mpd/sticker.sql
 touch $RPM_BUILD_ROOT/var/log/mpd/mpd.log
-touch $RPM_BUILD_ROOT/var/run/mpd/mpdstate
 
 rm -rf $RPM_BUILD_ROOT%{_docdir}/mpd
 
@@ -146,7 +153,7 @@ rm -rf $RPM_BUILD_ROOT
 %useradd -u 204 -r -d /home/services/mpd -s /bin/false -c "Music Player Daemon (MPD) user" -g audio -G mpd mpd
 
 %post
-for f in mpd.log mpd.error; do
+for f in mpd.log; do
 	if [ ! -f /var/log/%{name}/$f ]; then
 		touch /var/log/%{name}/$f
 		chown mpd:mpd /var/log/%{name}/$f
@@ -169,7 +176,7 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS NEWS README doc/mpdconf.example UPGRADING doc/api doc/developer doc/protocol doc/sticker doc/user
+%doc AUTHORS NEWS README doc/mpdconf.example UPGRADING doc/api doc/developer doc/protocol doc/user
 %attr(755,root,root) %{_bindir}/*
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/mpd.conf
 %attr(754,root,root) /etc/rc.d/init.d/mpd
@@ -178,8 +185,8 @@ fi
 %dir %attr(751,root,root) /var/log/%{name}
 %dir %attr(770,root,mpd) /var/run/%{name}
 %attr(644,mpd,mpd) %ghost /var/lib/%{name}/mpd.db
-%attr(644,mpd,mpd) %ghost /var/log/%{name}/mpd.error
+%attr(644,mpd,mpd) %ghost /var/lib/%{name}/mpdstate
+%attr(644,mpd,mpd) %ghost /var/lib/%{name}/sticker.sql
 %attr(644,mpd,mpd) %ghost /var/log/%{name}/mpd.log
-%attr(644,mpd,mpd) %ghost /var/run/%{name}/mpdstate
 %{_mandir}/man1/mpd.1*
 %{_mandir}/man5/mpd.conf.5*
