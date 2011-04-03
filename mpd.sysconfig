@@ -1,0 +1,4 @@
+# Nice level for mpd
+SERVICE_RUN_NICE_LEVEL="+0"
+
+#MPD_OPTIONS=""

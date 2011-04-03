@@ -11,6 +11,11 @@
 # Source function library
 . /etc/rc.d/init.d/functions
 
+MPD_OPTIONS=""
+
+# Get service config - may override defaults
+[ -f /etc/sysconfig/mpd ] && . /etc/sysconfig/mpd
+
 start() {
 	# Check if the service is already running?
 	if [ -f /var/lock/subsys/mpd ]; then
@@ -19,7 +24,6 @@ start() {
 	fi
 
 	msg_starting "Music Player Daemon"
-	OPTIONS=""
 	daemon /usr/bin/mpd
 	RETVAL=$?
 	[ $RETVAL -eq 0 ] && touch /var/lock/subsys/mpd

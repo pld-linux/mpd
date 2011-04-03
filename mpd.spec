@@ -4,19 +4,20 @@
 # Conditional build:
 %bcond_without	mod		# enable MOD support
 %bcond_without	pulseaudio	# disable PulseAudio support
-#
+
 Summary:	Music Player Daemon
 Summary(hu.UTF-8):	Music Player Daemon
 Summary(pl.UTF-8):	Music Player Daemon - demon odtwarzający muzykę
 Name:		mpd
 Version:	0.16.2
-Release:	1
+Release:	2
 License:	GPL v2+
 Group:		Applications/Multimedia
 Source0:	http://downloads.sourceforge.net/musicpd/%{name}-%{version}.tar.bz2
 # Source0-md5:	dedb75cef8e489f3de5231031876fb77
 Source1:	%{name}.conf
 Source2:	%{name}.init
+Source3:	%{name}.sysconfig
 URL:		http://www.musicpd.org/
 BuildRequires:	OpenAL-devel
 BuildRequires:	alsa-lib-devel >= 0.9.0
@@ -130,14 +131,15 @@ frontendów albo często restartujących X.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sysconfdir},/etc/rc.d/init.d} \
+install -d $RPM_BUILD_ROOT{%{_sysconfdir},/etc/{rc.d/init.d,sysconfig}} \
 	$RPM_BUILD_ROOT{/var/lib/mpd/playlists,/var/log/mpd,/var/run/mpd}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}
-install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/mpd
+cp -p %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}
+install -p %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/mpd
+cp -p %{SOURCE3} $RPM_BUILD_ROOT/etc/sysconfig/mpd
 
 touch $RPM_BUILD_ROOT/var/lib/mpd/mpd.db
 touch $RPM_BUILD_ROOT/var/lib/mpd/mpdstate
@@ -181,6 +183,7 @@ fi
 %attr(755,root,root) %{_bindir}/*
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/mpd.conf
 %attr(754,root,root) /etc/rc.d/init.d/mpd
+%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/mpd
 %dir %attr(770,root,mpd) /var/lib/%{name}
 %dir %attr(770,root,mpd) /var/lib/%{name}/playlists
 %dir %attr(751,root,root) /var/log/%{name}
