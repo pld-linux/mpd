@@ -13,35 +13,38 @@
 
 start() {
 	# Check if the service is already running?
-	if [ ! -f /var/lock/subsys/mpd ]; then
-		msg_starting "mpd"
-		OPTIONS=""
-		daemon mpd
-		RETVAL=$?
-		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/mpd
-	else
-		msg_already_running "mpd"
+	if [ -f /var/lock/subsys/mpd ]; then
+		msg_already_running "Music Player Daemon"
+		return
 	fi
+
+	msg_starting "Music Player Daemon"
+	OPTIONS=""
+	daemon /usr/bin/mpd
+	RETVAL=$?
+	[ $RETVAL -eq 0 ] && touch /var/lock/subsys/mpd
 }
 
 stop() {
-	if [ -f /var/lock/subsys/mpd ]; then
-		msg_stopping "mpd"
-		killproc mpd
-		rm -f /var/lock/subsys/mpd >/dev/null 2>&1
-	else
-		msg_not_running "mpd"
+	if [ ! -f /var/lock/subsys/mpd ]; then
+		msg_not_running "Music Player Daemon"
+		return
 	fi
+
+	msg_stopping "Music Player Daemon"
+	killproc mpd
+	rm -f /var/lock/subsys/mpd >/dev/null 2>&1
 }
 
 condrestart() {
 	if [ -f /var/lock/subsys/mpd ]; then
-		stop
-		start
-	else
 		msg_not_running mpd
 		RETVAL=$1
+		return
 	fi
+
+	stop
+	start
 }
 
 RETVAL=0
