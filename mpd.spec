@@ -84,6 +84,36 @@ w sieci lokalnej. Służy także za dobry odtwarzacz muzyki dla
 komputerów biurkowych, zwłaszcza dla miłośników konsoli, różnych opcji
 frontendów albo często restartujących X.
 
+%package apidocs
+Summary:	MPD API documentation
+Summary(pl.UTF-8):	Dokumentacja API biblioteki API
+Group:		Documentation
+
+%description apidocs
+API and internal documentation for MPD library.
+
+%description apidocs -l pl.UTF-8
+Dokumentacja API biblioteki MPD.
+
+%package doc
+Summary:	Documentation for Music Player Daemon (MPD)
+Summary(fr.UTF-8):	Documentation pour Music Player Daemon (MPD)
+Summary(it.UTF-8):	Documentazione di Music Player Daemon (MPD)
+Summary(pl.UTF-8):	Podręcznik dla Music Player Daemon (MPD)
+Group:		Documentation
+
+%description doc
+Documentation for Music Player Daemon (MPD).
+
+%description doc -l fr.UTF-8
+Documentation pour Music Player Daemon (MPD).
+
+%description doc -l it.UTF-8
+Documentazione di Music Player Daemon (MPD).
+
+%description doc -l pl.UTF-8
+Dokumentacja do Music Player Daemon (MPD).
+
 %prep
 %setup -q
 
@@ -179,7 +209,7 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS NEWS README doc/mpdconf.example UPGRADING doc/api doc/developer doc/protocol doc/user
+%doc AUTHORS NEWS README doc/mpdconf.example UPGRADING
 %attr(755,root,root) %{_bindir}/*
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/mpd.conf
 %attr(754,root,root) /etc/rc.d/init.d/mpd
@@ -194,3 +224,11 @@ fi
 %attr(644,mpd,mpd) %ghost /var/log/%{name}/mpd.log
 %{_mandir}/man1/mpd.1*
 %{_mandir}/man5/mpd.conf.5*
+
+%files doc
+%defattr(644,root,root,755)
+%doc doc/user/*
+
+%files apidocs
+%defattr(644,root,root,755)
+%doc doc/api doc/developer doc/protocol
