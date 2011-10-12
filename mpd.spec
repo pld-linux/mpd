@@ -4,23 +4,22 @@
 # Conditional build:
 %bcond_without	mod		# enable MOD support
 %bcond_without	pulseaudio	# disable PulseAudio support
-%bcond_with		audiofile	# Audiofile support (WAV and others)
+%bcond_without	audiofile	# Audiofile support (WAV and others)
 
 Summary:	Music Player Daemon
 Summary(hu.UTF-8):	Music Player Daemon
 Summary(pl.UTF-8):	Music Player Daemon - demon odtwarzający muzykę
 Name:		mpd
-Version:	0.16.3
-Release:	7
+Version:	0.16.5
+Release:	1
 License:	GPL v2+
 Group:		Applications/Multimedia
 Source0:	http://downloads.sourceforge.net/musicpd/%{name}-%{version}.tar.bz2
-# Source0-md5:	6e708c02b0e8c288aec855eecf441a5a
+# Source0-md5:	f7564cff12035f6a1112cce770655df7
 Source1:	%{name}.conf
 Source2:	%{name}.init
 Source3:	%{name}.sysconfig
 URL:		http://www.musicpd.org/
-Patch0:		%{name}-ffmpeg_sigsegv.patch
 BuildRequires:	OpenAL-devel
 BuildRequires:	alsa-lib-devel >= 0.9.0
 %{?with_audiofile:BuildRequires:	audiofile-devel >= 0.1.7}
@@ -119,7 +118,6 @@ Dokumentacja do Music Player Daemon (MPD).
 
 %prep
 %setup -q
-%patch0 -p1
 
 %build
 # ac_cv_* hacks to avoid unwanted linking
