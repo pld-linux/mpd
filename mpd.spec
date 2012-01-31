@@ -19,6 +19,7 @@ Source0:	http://downloads.sourceforge.net/musicpd/%{name}-%{version}.tar.bz2
 Source1:	%{name}.conf
 Source2:	%{name}.init
 Source3:	%{name}.sysconfig
+Source4:	%{name}.tmpfiles
 URL:		http://www.musicpd.org/
 BuildRequires:	OpenAL-devel
 BuildRequires:	alsa-lib-devel >= 0.9.0
@@ -166,7 +167,8 @@ GME_CFLAGS="-I/usr/include/gme" GME_LIBS="-lgme" \
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sysconfdir},/etc/{rc.d/init.d,sysconfig}} \
-	$RPM_BUILD_ROOT{/var/lib/mpd/playlists,/var/log/mpd,/var/run/mpd}
+	$RPM_BUILD_ROOT{/var/lib/mpd/playlists,/var/log/mpd,/var/run/mpd} \
+	$RPM_BUILD_ROOT/usr/lib/tmpfiles.d
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
@@ -174,6 +176,7 @@ install -d $RPM_BUILD_ROOT{%{_sysconfdir},/etc/{rc.d/init.d,sysconfig}} \
 cp -p %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}
 install -p %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/mpd
 cp -p %{SOURCE3} $RPM_BUILD_ROOT/etc/sysconfig/mpd
+install %{SOURCE4} $RPM_BUILD_ROOT/usr/lib/tmpfiles.d/%{name}.conf
 
 touch $RPM_BUILD_ROOT/var/lib/mpd/mpd.db
 touch $RPM_BUILD_ROOT/var/lib/mpd/mpdstate
@@ -218,6 +221,7 @@ fi
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/mpd.conf
 %attr(754,root,root) /etc/rc.d/init.d/mpd
 %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/mpd
+/usr/lib/tmpfiles.d/%{name}.conf
 %dir %attr(770,root,mpd) /var/lib/%{name}
 %dir %attr(770,root,mpd) /var/lib/%{name}/playlists
 %dir %attr(751,root,root) /var/log/%{name}
