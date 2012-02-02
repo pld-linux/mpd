@@ -10,12 +10,12 @@ Summary:	Music Player Daemon
 Summary(hu.UTF-8):	Music Player Daemon
 Summary(pl.UTF-8):	Music Player Daemon - demon odtwarzający muzykę
 Name:		mpd
-Version:	0.16.5
-Release:	4
+Version:	0.16.6
+Release:	1
 License:	GPL v2+
 Group:		Applications/Multimedia
 Source0:	http://downloads.sourceforge.net/musicpd/%{name}-%{version}.tar.bz2
-# Source0-md5:	f7564cff12035f6a1112cce770655df7
+# Source0-md5:	5489dd327fba12c67f01558d2cfa6d57
 Source1:	%{name}.conf
 Source2:	%{name}.init
 Source3:	%{name}.sysconfig
@@ -51,6 +51,7 @@ BuildRequires:	libshout-devel
 BuildRequires:	libvorbis-devel
 BuildRequires:	pkgconfig >= 1:0.9.0
 %{?with_pulseaudio:BuildRequires:	pulseaudio-devel}
+BuildRequires:	rpmbuild(macros) >= 1.629-2
 BuildRequires:	sqlite3-devel
 BuildRequires:	twolame-devel
 BuildRequires:	wavpack-devel
@@ -58,6 +59,7 @@ BuildRequires:	wildmidi-devel
 BuildRequires:	xmlto
 BuildRequires:	zlib-devel
 BuildRequires:	zziplib-devel
+Requires:	systemd-units >= 37-0.10
 Provides:	group(mpd)
 Provides:	user(mpd)
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -161,7 +163,8 @@ GME_CFLAGS="-I/usr/include/gme" GME_LIBS="-lgme" \
 	--enable-wildmidi \
 	--enable-zzip \
 	--with-zeroconf=avahi \
-	--without-tremor
+	--without-tremor \
+	--with-systemdsystemunitdir=%{systemdunitdir}
 %{__make}
 
 %install
@@ -201,18 +204,24 @@ for f in mpd.log; do
 	fi
 done
 /sbin/chkconfig --add mpd
+%systemd_post %{name}.service
 
 %preun
 if [ "$1" = "0" ]; then
 	%service mpd stop
 	/sbin/chkconfig --del mpd
 fi
+%systemd_preun %{name}.service
 
 %postun
 if [ "$1" = "0" ]; then
 	%userremove mpd
 	%groupremove mpd
 fi
+%systemd_reload
+
+%triggerpostun -- %{name} < 0.16.6-1
+%systemd_trigger %{name}.service
 
 %files
 %defattr(644,root,root,755)
@@ -222,6 +231,7 @@ fi
 %attr(754,root,root) /etc/rc.d/init.d/mpd
 %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/mpd
 /usr/lib/tmpfiles.d/%{name}.conf
+%{systemdunitdir}/mpd.service
 %dir %attr(770,root,mpd) /var/lib/%{name}
 %dir %attr(770,root,mpd) /var/lib/%{name}/playlists
 %dir %attr(751,root,root) /var/log/%{name}
