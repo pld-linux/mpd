@@ -10,12 +10,12 @@ Summary:	Music Player Daemon
 Summary(hu.UTF-8):	Music Player Daemon
 Summary(pl.UTF-8):	Music Player Daemon - demon odtwarzający muzykę
 Name:		mpd
-Version:	0.16.6
+Version:	0.16.7
 Release:	1
 License:	GPL v2+
 Group:		Applications/Multimedia
 Source0:	http://downloads.sourceforge.net/musicpd/%{name}-%{version}.tar.bz2
-# Source0-md5:	5489dd327fba12c67f01558d2cfa6d57
+# Source0-md5:	3d0e7c36646e80386b32966bd4268e8d
 Source1:	%{name}.conf
 Source2:	%{name}.init
 Source3:	%{name}.sysconfig
@@ -47,6 +47,7 @@ BuildRequires:	libmodplug-devel
 BuildRequires:	libmpcdec-devel
 BuildRequires:	libogg-devel
 BuildRequires:	libsamplerate-devel >= 0.0.15
+BuildRequires:	libsidplay2-devel >= 2.1.1-5
 BuildRequires:	libshout-devel
 BuildRequires:	libvorbis-devel
 BuildRequires:	pkgconfig >= 1:0.9.0
@@ -130,7 +131,7 @@ GME_CFLAGS="-I/usr/include/gme" GME_LIBS="-lgme" \
 	ac_cv_lib_nsl_gethostbyname=no \
 	%{!?with_pulseaudio:--disable-pulse} \
 	%{?with_mod:--enable-mikmod} \
-	--disable-sidplay \
+	--enable-sidplay \
 	--enable-alsa \
 	--enable-ao \
 	%{?with_audiofile:--enable-audiofile} \
