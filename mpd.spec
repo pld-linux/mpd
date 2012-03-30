@@ -11,7 +11,7 @@ Summary(hu.UTF-8):	Music Player Daemon
 Summary(pl.UTF-8):	Music Player Daemon - demon odtwarzający muzykę
 Name:		mpd
 Version:	0.16.7
-Release:	1
+Release:	2
 License:	GPL v2+
 Group:		Applications/Multimedia
 Source0:	http://downloads.sourceforge.net/musicpd/%{name}-%{version}.tar.bz2
@@ -47,8 +47,8 @@ BuildRequires:	libmodplug-devel
 BuildRequires:	libmpcdec-devel
 BuildRequires:	libogg-devel
 BuildRequires:	libsamplerate-devel >= 0.0.15
-BuildRequires:	libsidplay2-devel >= 2.1.1-5
 BuildRequires:	libshout-devel
+BuildRequires:	libsidplay2-devel >= 2.1.1-5
 BuildRequires:	libvorbis-devel
 BuildRequires:	pkgconfig >= 1:0.9.0
 %{?with_pulseaudio:BuildRequires:	pulseaudio-devel}
@@ -172,7 +172,7 @@ GME_CFLAGS="-I/usr/include/gme" GME_LIBS="-lgme" \
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sysconfdir},/etc/{rc.d/init.d,sysconfig}} \
 	$RPM_BUILD_ROOT{/var/lib/mpd/playlists,/var/log/mpd,/var/run/mpd} \
-	$RPM_BUILD_ROOT/usr/lib/tmpfiles.d
+	$RPM_BUILD_ROOT%{systemdtmpfilesdir}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
@@ -180,7 +180,7 @@ install -d $RPM_BUILD_ROOT{%{_sysconfdir},/etc/{rc.d/init.d,sysconfig}} \
 cp -p %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}
 install -p %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/mpd
 cp -p %{SOURCE3} $RPM_BUILD_ROOT/etc/sysconfig/mpd
-install %{SOURCE4} $RPM_BUILD_ROOT/usr/lib/tmpfiles.d/%{name}.conf
+install %{SOURCE4} $RPM_BUILD_ROOT%{systemdtmpfilesdir}/%{name}.conf
 
 touch $RPM_BUILD_ROOT/var/lib/mpd/mpd.db
 touch $RPM_BUILD_ROOT/var/lib/mpd/mpdstate
@@ -194,7 +194,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %pre
 %groupadd -g 204 mpd
-%useradd -u 204 -r -d /home/services/mpd -s /bin/false -c "Music Player Daemon (MPD) user" -G audio -g mpd mpd
+%useradd -u 204 -r -d /var/lib/mpd -s /bin/false -c "Music Player Daemon (MPD) user" -G audio -g mpd mpd
 
 %post
 for f in mpd.log; do
@@ -231,7 +231,7 @@ fi
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/mpd.conf
 %attr(754,root,root) /etc/rc.d/init.d/mpd
 %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/mpd
-/usr/lib/tmpfiles.d/%{name}.conf
+%{systemdtmpfilesdir}/%{name}.conf
 %{systemdunitdir}/mpd.service
 %dir %attr(770,root,mpd) /var/lib/%{name}
 %dir %attr(770,root,mpd) /var/lib/%{name}/playlists
