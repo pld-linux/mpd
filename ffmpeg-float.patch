@@ -1,0 +1,24 @@
+From 1105e61f292fd61a6316a4b83439dbaa29c102fd Mon Sep 17 00:00:00 2001
+From: Brice Jaglin <bjaglin@free.fr>
+Date: Wed, 16 Jan 2013 17:02:58 +0000
+Subject: decoder/ffmpeg: support float planar audio
+
+---
+diff --git a/src/decoder/ffmpeg_decoder_plugin.c b/src/decoder/ffmpeg_decoder_plugin.c
+index 72a5ff3..4c4cb2b 100644
+--- a/src/decoder/ffmpeg_decoder_plugin.c
++++ b/src/decoder/ffmpeg_decoder_plugin.c
+@@ -395,6 +395,11 @@ ffmpeg_sample_format(enum AVSampleFormat sample_fmt)
+ #endif
+ 		return SAMPLE_FORMAT_S32;
+ 
++#if LIBAVUTIL_VERSION_INT >= AV_VERSION_INT(51,17,0)
++	case AV_SAMPLE_FMT_FLTP:
++		return SAMPLE_FORMAT_FLOAT;
++#endif
++
+ 	default:
+ 		break;
+ 	}
+--
+cgit v0.9.0.3-66-g3205
