@@ -10,18 +10,17 @@ Summary:	Music Player Daemon
 Summary(hu.UTF-8):	Music Player Daemon
 Summary(pl.UTF-8):	Music Player Daemon - demon odtwarzający muzykę
 Name:		mpd
-Version:	0.17.3
+Version:	0.17.4
 Release:	1
 License:	GPL v2+
 Group:		Applications/Multimedia
-Source0:	http://downloads.sourceforge.net/musicpd/%{name}-%{version}.tar.bz2
-# Source0-md5:	cfc9dbf54f52569b998677fe1fa79c11
+Source0:	http://www.musicpd.org/download/mpd/0.17/%{name}-%{version}.tar.xz
+# Source0-md5:	ab408a61f49f215ce77ed0cf1deed6e1
 Source1:	%{name}.conf
 Source2:	%{name}.init
 Source3:	%{name}.sysconfig
 Source4:	%{name}.tmpfiles
 Patch0:		%{name}-cdio.patch
-Patch1:		ffmpeg-float.patch
 URL:		http://www.musicpd.org/
 BuildRequires:	OpenAL-devel
 BuildRequires:	alsa-lib-devel >= 0.9.0
@@ -126,7 +125,6 @@ Dokumentacja do Music Player Daemon (MPD).
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
 
 %build
 # ac_cv_* hacks to avoid unwanted linking
@@ -141,7 +139,6 @@ GME_CFLAGS="-I/usr/include/gme" GME_LIBS="-lgme" \
 	--enable-ao \
 	%{?with_audiofile:--enable-audiofile} \
 	--enable-bzip2 \
-	--enable-cue \
 	--enable-curl \
 	--enable-documentation \
 	--enable-ffmpeg \
