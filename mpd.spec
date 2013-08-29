@@ -21,6 +21,7 @@ Source2:	%{name}.init
 Source3:	%{name}.sysconfig
 Source4:	%{name}.tmpfiles
 Patch0:		%{name}-cdio.patch
+Patch1:		%{name}-ffmpeg2.patch
 URL:		http://www.musicpd.org/
 BuildRequires:	OpenAL-devel
 BuildRequires:	alsa-lib-devel >= 0.9.0
@@ -125,6 +126,7 @@ Dokumentacja do Music Player Daemon (MPD).
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
 
 %build
 # ac_cv_* hacks to avoid unwanted linking
