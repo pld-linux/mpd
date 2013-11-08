@@ -10,22 +10,23 @@ Summary:	Music Player Daemon
 Summary(hu.UTF-8):	Music Player Daemon
 Summary(pl.UTF-8):	Music Player Daemon - demon odtwarzający muzykę
 Name:		mpd
-Version:	0.17.6
+Version:	0.18.3
 Release:	1
 License:	GPL v2+
 Group:		Applications/Multimedia
-Source0:	http://www.musicpd.org/download/mpd/0.17/%{name}-%{version}.tar.xz
-# Source0-md5:	d0da6a6a1d9cf1e8710b6082f6ef7849
+Source0:	http://www.musicpd.org/download/mpd/0.18/%{name}-%{version}.tar.xz
+# Source0-md5:	7e6b823465c69a3e963c72096dfec636
 Source1:	%{name}.conf
 Source2:	%{name}.init
 Source3:	%{name}.sysconfig
 Source4:	%{name}.tmpfiles
 Patch0:		%{name}-cdio.patch
-Patch1:		%{name}-ffmpeg2.patch
+Patch1:		%{name}-mpcsv8.patch
 URL:		http://www.musicpd.org/
 BuildRequires:	OpenAL-devel
 BuildRequires:	alsa-lib-devel >= 0.9.0
 %{?with_audiofile:BuildRequires:	audiofile-devel >= 0.1.7}
+BuildRequires:	autoconf >= 2.60
 BuildRequires:	avahi-glib-devel
 BuildRequires:	bzip2-devel
 BuildRequires:	curl-devel
@@ -46,12 +47,12 @@ BuildRequires:	libmad-devel
 %{?with_mod:BuildRequires:	libmikmod-devel >= 3.1.7}
 BuildRequires:	libmms-devel
 BuildRequires:	libmodplug-devel
-BuildRequires:	libmpcdec-devel
 BuildRequires:	libogg-devel
 BuildRequires:	libsamplerate-devel >= 0.0.15
 BuildRequires:	libshout-devel
 BuildRequires:	libsidplay2-devel >= 2.1.1-5
 BuildRequires:	libvorbis-devel
+BuildRequires:	musepack-devel
 BuildRequires:	pkgconfig >= 1:0.9.0
 %{?with_pulseaudio:BuildRequires:	pulseaudio-devel}
 BuildRequires:	rpmbuild(macros) >= 1.629-2
@@ -129,6 +130,10 @@ Dokumentacja do Music Player Daemon (MPD).
 %patch1 -p1
 
 %build
+%{__aclocal} -I m4
+%{__autoconf}
+%{__autoheader}
+%{__automake}
 # ac_cv_* hacks to avoid unwanted linking
 GME_CFLAGS="-I/usr/include/gme" GME_LIBS="-lgme" \
 %configure \

@@ -1,0 +1,12 @@
+diff -urN mpd-0.18.2.orig/configure.ac mpd-0.18.2/configure.ac
+--- mpd-0.18.2.orig/configure.ac	2013-11-08 12:10:16.943635089 +0100
++++ mpd-0.18.2/configure.ac	2013-11-08 12:13:13.986976726 +0100
+@@ -957,7 +957,7 @@
+ 
+ dnl --------------------------------- musepack --------------------------------
+ 
+-MPD_AUTO_LIB(mpc, MPCDEC, mpcdec, main, [-lmpcdec], [],
++MPD_AUTO_LIB(mpc, MPCDEC, mpcdecsv8, main, [-lmpcdecsv8], [],
+ 	[mpcdec], [libmpcdec not found])
+ if test x$enable_mpc = xyes; then
+ 	AC_DEFINE(HAVE_MPCDEC, 1, [Define to use libmpcdec for MPC decoding])
