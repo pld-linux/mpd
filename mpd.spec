@@ -10,12 +10,12 @@ Summary:	Music Player Daemon
 Summary(hu.UTF-8):	Music Player Daemon
 Summary(pl.UTF-8):	Music Player Daemon - demon odtwarzający muzykę
 Name:		mpd
-Version:	0.18.3
+Version:	0.18.4
 Release:	1
 License:	GPL v2+
 Group:		Applications/Multimedia
 Source0:	http://www.musicpd.org/download/mpd/0.18/%{name}-%{version}.tar.xz
-# Source0-md5:	7e6b823465c69a3e963c72096dfec636
+# Source0-md5:	728527f957e34910ac2766fb87555bc4
 Source1:	%{name}.conf
 Source2:	%{name}.init
 Source3:	%{name}.sysconfig
@@ -24,6 +24,7 @@ Patch0:		%{name}-cdio.patch
 Patch1:		%{name}-mpcsv8.patch
 URL:		http://www.musicpd.org/
 BuildRequires:	OpenAL-devel
+BuildRequires:	adplug-devel
 BuildRequires:	alsa-lib-devel >= 0.9.0
 %{?with_audiofile:BuildRequires:	audiofile-devel >= 0.1.7}
 BuildRequires:	autoconf >= 2.60
@@ -61,6 +62,7 @@ BuildRequires:	twolame-devel
 BuildRequires:	wavpack-devel
 BuildRequires:	wildmidi-devel
 BuildRequires:	xmlto
+BuildRequires:	yajl-devel >= 2.0
 BuildRequires:	zlib-devel
 BuildRequires:	zziplib-devel
 Requires(post,preun,postun):	systemd-units >= 38
@@ -142,6 +144,7 @@ GME_CFLAGS="-I/usr/include/gme" GME_LIBS="-lgme" \
 	%{!?with_pulseaudio:--disable-pulse} \
 	%{?with_mod:--enable-mikmod} \
 	--enable-sidplay \
+	--enable-adplug \
 	--enable-alsa \
 	--enable-ao \
 	%{?with_audiofile:--enable-audiofile} \
@@ -155,16 +158,15 @@ GME_CFLAGS="-I/usr/include/gme" GME_LIBS="-lgme" \
 	--enable-iso9660 \
 	--enable-jack \
 	--enable-lame-encoder \
-	--enable-lastfm \
 	--enable-lsr \
 	--enable-mad \
 	--enable-mms \
 	--enable-modplug \
-	--enable-mvp \
 	--enable-openal \
 	--enable-pipe-output \
 	--enable-recorder-output \
 	--enable-shout \
+	--enable-soundcloud \
 	--enable-sqlite \
 	--enable-twolame-encoder \
 	--enable-vorbis-encoder \
