@@ -5,8 +5,8 @@ diff -urN mpd-0.18.2.orig/configure.ac mpd-0.18.2/configure.ac
  
  dnl --------------------------------- musepack --------------------------------
  
--MPD_AUTO_LIB(mpc, MPCDEC, mpcdec, main, [-lmpcdec], [],
-+MPD_AUTO_LIB(mpc, MPCDEC, mpcdecsv8, main, [-lmpcdecsv8], [],
+-MPD_AUTO_LIB(mpc, MPCDEC, mpcdec, mpc_demux_init, [-lmpcdec], [],
++MPD_AUTO_LIB(mpc, MPCDEC, mpcdecsv8, mpc_demux_init, [-lmpcdecsv8], [],
  	[mpcdec], [libmpcdec not found])
  if test x$enable_mpc = xyes; then
  	AC_DEFINE(HAVE_MPCDEC, 1, [Define to use libmpcdec for MPC decoding])
