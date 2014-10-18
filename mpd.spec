@@ -10,60 +10,79 @@ Summary:	Music Player Daemon
 Summary(hu.UTF-8):	Music Player Daemon
 Summary(pl.UTF-8):	Music Player Daemon - demon odtwarzający muzykę
 Name:		mpd
-Version:	0.18.16
-Release:	2
+Version:	0.19
+Release:	1
 License:	GPL v2+
 Group:		Applications/Multimedia
-Source0:	http://www.musicpd.org/download/mpd/0.18/%{name}-%{version}.tar.xz
-# Source0-md5:	900657ff55726f4cc09a27eb7df57015
+Source0:	http://www.musicpd.org/download/mpd/0.19/%{name}-%{version}.tar.xz
+# Source0-md5:	770261630e6f086bd7d5b374abf521c0
 Source1:	%{name}.conf
 Source2:	%{name}.init
 Source3:	%{name}.sysconfig
 Source4:	%{name}.tmpfiles
+Source5:	%{name}.socket
 Patch0:		%{name}-mpcsv8.patch
 URL:		http://www.musicpd.org/
 BuildRequires:	OpenAL-devel
 BuildRequires:	adplug-devel
 BuildRequires:	alsa-lib-devel >= 0.9.0
-%{?with_audiofile:BuildRequires:	audiofile-devel >= 0.1.7}
+%{?with_audiofile:BuildRequires:	audiofile-devel >= 0.3}
 BuildRequires:	autoconf >= 2.60
-BuildRequires:	avahi-glib-devel
+BuildRequires:	automake >= 1:1.11
+BuildRequires:	avahi-devel
+BuildRequires:	boost-devel >= 1.54
 BuildRequires:	bzip2-devel
-BuildRequires:	curl-devel
+BuildRequires:	curl-devel >= 7.18
+BuildRequires:	dbus-devel
 BuildRequires:	doxygen
+BuildRequires:	expat-devel
 BuildRequires:	faad2-devel >= 2.6.1-5
 BuildRequires:	ffmpeg-devel
-BuildRequires:	flac-devel >= 1.1.0
-BuildRequires:	fluidsynth-devel
+BuildRequires:	flac-devel >= 1.2.0
+BuildRequires:	fluidsynth-devel >= 1.1
 BuildRequires:	game-music-emu-devel
-BuildRequires:	glib2-devel >= 2.12
-BuildRequires:	jack-audio-connection-kit-devel >= 0.4
+BuildRequires:	glib2-devel >= 1:2.28.0
+BuildRequires:	harfbuzz-icu-devel
+BuildRequires:	jack-audio-connection-kit-devel >= 0.100
 BuildRequires:	lame-libs-devel
 BuildRequires:	libao-devel >= 0.8.3
 BuildRequires:	libcdio-devel
+BuildRequires:	libcdio-paranoia-devel
 BuildRequires:	libcue-devel
 BuildRequires:	libid3tag-devel
 BuildRequires:	libmad-devel
 %{?with_mod:BuildRequires:	libmikmod-devel >= 3.1.7}
-BuildRequires:	libmms-devel
+BuildRequires:	libmms-devel >= 0.4
 BuildRequires:	libmodplug-devel
+BuildRequires:	libmpdclient-devel >= 2.2
+BuildRequires:	libnfs-devel
 BuildRequires:	libogg-devel
-BuildRequires:	libsamplerate-devel >= 0.0.15
+BuildRequires:	libsamplerate-devel >= 0.1.3
 BuildRequires:	libshout-devel
 BuildRequires:	libsidplay2-devel >= 2.1.1-5
+BuildRequires:	libsmbclient-devel >= 0.2
+BuildRequires:	libsndfile-devel
+BuildRequires:	libstdc++-devel >= 0.2
+BuildRequires:	libupnp-devel
+BuildRequires:	libwrap-devel
 BuildRequires:	libvorbis-devel
+BuildRequires:	mp4v2-devel
 BuildRequires:	musepack-devel
+BuildRequires:	opus-devel
 BuildRequires:	pkgconfig >= 1:0.9.0
-%{?with_pulseaudio:BuildRequires:	pulseaudio-devel}
+%{?with_pulseaudio:BuildRequires:	pulseaudio-devel >= 0.9.16}
 BuildRequires:	rpmbuild(macros) >= 1.629-2
+BuildRequires:	shine-devel >= 3.1
+BuildRequires:	soxr-devel
 BuildRequires:	sqlite3-devel
+BuildRequires:	systemd-devel
 BuildRequires:	twolame-devel
 BuildRequires:	wavpack-devel
 BuildRequires:	wildmidi-devel
 BuildRequires:	xmlto
 BuildRequires:	yajl-devel >= 2.0
 BuildRequires:	zlib-devel
-BuildRequires:	zziplib-devel
+BuildRequires:	zziplib-devel >= 0.13
 Requires(post,preun,postun):	systemd-units >= 38
 Requires:	systemd-units >= 38
 Provides:	group(mpd)
@@ -128,6 +147,7 @@ Dokumentacja do Music Player Daemon (MPD).
 %prep
 %setup -q
 %patch0 -p1
+cp -p %{SOURCE5} systemd
 
 %build
 %{__aclocal} -I m4
@@ -141,36 +161,65 @@ GME_CFLAGS="-I/usr/include/gme" GME_LIBS="-lgme" \
 	ac_cv_lib_nsl_gethostbyname=no \
 	%{!?with_pulseaudio:--disable-pulse} \
 	%{?with_mod:--enable-mikmod} \
-	--enable-sidplay \
 	--enable-adplug \
 	--enable-alsa \
 	--enable-ao \
 	%{?with_audiofile:--enable-audiofile} \
 	--enable-bzip2 \
+	--enable-cdio-paranoia \
 	--enable-curl \
+	--enable-database \
 	--enable-documentation \
+	--enable-dsd \
+	--enable-expat \
 	--enable-ffmpeg \
+	--enable-fifo \
+	--enable-flac \
 	--enable-fluidsynth \
 	--enable-gme \
 	--enable-httpd-output \
+	--enable-icu \
+	--enable-id3 \
+	--enable-inotify \
+	--enable-ipv6 \
 	--enable-iso9660 \
 	--enable-jack \
 	--enable-lame-encoder \
+	--enable-libmpdclient \
+	--enable-libwrap \
 	--enable-lsr \
 	--enable-mad \
+	--enable-mikmod \
 	--enable-mms \
 	--enable-modplug \
+	--enable-mp4v2 \
+	--enable-mpc \
+	--enable-nfs \
 	--enable-openal \
+	--enable-opus \
+	--enable-oss \
 	--enable-pipe-output \
 	--enable-recorder-output \
+	--enable-sidplay \
+	--enable-shine \
 	--enable-shout \
+	--enable-smbclient \
+	--enable-sndfile \
 	--enable-soundcloud \
+	--enable-soxr \
 	--enable-sqlite \
+	--enable-systemd-daemon \
+	--enable-tcp \
 	--enable-twolame-encoder \
+	--enable-upnp \
+	--enable-un \
+	--enable-vorbis \
 	--enable-vorbis-encoder \
 	--enable-wave-encoder \
 	--enable-wavpack \
 	--enable-wildmidi \
+	--enable-zeroconf \
+	--enable-zlib \
 	--enable-zzip \
 	--with-zeroconf=avahi \
 	--without-tremor \
@@ -214,14 +263,14 @@ for f in mpd.log; do
 	fi
 done
 /sbin/chkconfig --add mpd
-%systemd_post %{name}.service
+%systemd_post %{name}.service %{name}.socket
 
 %preun
 if [ "$1" = "0" ]; then
 	%service mpd stop
 	/sbin/chkconfig --del mpd
 fi
-%systemd_preun %{name}.service
+%systemd_preun %{name}.service %{name}.socket
 
 %postun
 if [ "$1" = "0" ]; then
@@ -235,13 +284,14 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS NEWS README doc/mpdconf.example UPGRADING
+%doc AUTHORS INSTALL NEWS README doc/mpdconf.example
 %attr(755,root,root) %{_bindir}/*
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/mpd.conf
 %attr(754,root,root) /etc/rc.d/init.d/mpd
 %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/mpd
 %{systemdtmpfilesdir}/%{name}.conf
 %{systemdunitdir}/mpd.service
+%{systemdunitdir}/mpd.socket
 %dir %attr(770,root,mpd) /var/lib/%{name}
 %dir %attr(770,root,mpd) /var/lib/%{name}/playlists
 %dir %attr(751,root,root) /var/log/%{name}
