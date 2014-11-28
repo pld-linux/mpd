@@ -10,12 +10,12 @@ Summary:	Music Player Daemon
 Summary(hu.UTF-8):	Music Player Daemon
 Summary(pl.UTF-8):	Music Player Daemon - demon odtwarzający muzykę
 Name:		mpd
-Version:	0.19.4
+Version:	0.19.5
 Release:	1
 License:	GPL v2+
 Group:		Applications/Multimedia
 Source0:	http://www.musicpd.org/download/mpd/0.19/%{name}-%{version}.tar.xz
-# Source0-md5:	1f61cf76add97615600b6982a420e41f
+# Source0-md5:	dd3d2088205dc5f8fb4b6768ed7d9f5c
 Source1:	%{name}.conf
 Source2:	%{name}.init
 Source3:	%{name}.sysconfig
@@ -65,7 +65,6 @@ BuildRequires:	libstdc++-devel >= 0.2
 BuildRequires:	libupnp-devel
 BuildRequires:	libwrap-devel
 BuildRequires:	libvorbis-devel
-BuildRequires:	mp4v2-devel
 BuildRequires:	musepack-devel
 BuildRequires:	opus-devel
 BuildRequires:	pkgconfig >= 1:0.9.0
@@ -190,7 +189,6 @@ GME_CFLAGS="-I/usr/include/gme" GME_LIBS="-lgme" \
 	--enable-mikmod \
 	--enable-mms \
 	--enable-modplug \
-	--enable-mp4v2 \
 	--enable-mpc \
 	--enable-nfs \
 	--enable-openal \
@@ -199,7 +197,7 @@ GME_CFLAGS="-I/usr/include/gme" GME_LIBS="-lgme" \
 	--enable-pipe-output \
 	--enable-recorder-output \
 	--enable-sidplay \
-	--enable-shine \
+	--enable-shine-encoder \
 	--enable-shout \
 	--enable-smbclient \
 	--enable-sndfile \
@@ -216,7 +214,6 @@ GME_CFLAGS="-I/usr/include/gme" GME_LIBS="-lgme" \
 	--enable-wave-encoder \
 	--enable-wavpack \
 	--enable-wildmidi \
-	--enable-zeroconf \
 	--enable-zlib \
 	--enable-zzip \
 	--with-zeroconf=avahi \
