@@ -10,12 +10,12 @@ Summary:	Music Player Daemon
 Summary(hu.UTF-8):	Music Player Daemon
 Summary(pl.UTF-8):	Music Player Daemon - demon odtwarzający muzykę
 Name:		mpd
-Version:	0.19.13
-Release:	2
+Version:	0.19.14
+Release:	1
 License:	GPL v2+
 Group:		Applications/Multimedia
 Source0:	http://www.musicpd.org/download/mpd/0.19/%{name}-%{version}.tar.xz
-# Source0-md5:	016c93fc3d78bfb92e896445f04ea741
+# Source0-md5:	9f99340ec6b77bea4ba3729e3b76fd7c
 Source1:	%{name}.conf
 Source2:	%{name}.init
 Source3:	%{name}.sysconfig
@@ -41,13 +41,13 @@ BuildRequires:	flac-devel >= 1.2.0
 BuildRequires:	fluidsynth-devel >= 1.1
 BuildRequires:	game-music-emu-devel
 BuildRequires:	glib2-devel >= 1:2.28.0
-BuildRequires:	harfbuzz-icu-devel
 BuildRequires:	jack-audio-connection-kit-devel >= 0.100
 BuildRequires:	lame-libs-devel
 BuildRequires:	libao-devel >= 0.8.3
 BuildRequires:	libcdio-devel
 BuildRequires:	libcdio-paranoia-devel
 BuildRequires:	libcue-devel
+BuildRequires:	libicu-devel
 BuildRequires:	libid3tag-devel
 BuildRequires:	libmad-devel
 %{?with_mod:BuildRequires:	libmikmod-devel >= 3.1.7}
@@ -63,8 +63,8 @@ BuildRequires:	libsmbclient-devel >= 0.2
 BuildRequires:	libsndfile-devel
 BuildRequires:	libstdc++-devel >= 0.2
 BuildRequires:	libupnp-devel
-BuildRequires:	libwrap-devel
 BuildRequires:	libvorbis-devel
+BuildRequires:	libwrap-devel
 BuildRequires:	musepack-devel
 BuildRequires:	opus-devel
 BuildRequires:	pkgconfig >= 1:0.9.0
@@ -233,7 +233,7 @@ install -d $RPM_BUILD_ROOT{%{_sysconfdir},/etc/{rc.d/init.d,sysconfig}} \
 cp -p %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}
 install -p %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/mpd
 cp -p %{SOURCE3} $RPM_BUILD_ROOT/etc/sysconfig/mpd
-install %{SOURCE4} $RPM_BUILD_ROOT%{systemdtmpfilesdir}/%{name}.conf
+cp -p %{SOURCE4} $RPM_BUILD_ROOT%{systemdtmpfilesdir}/%{name}.conf
 
 touch $RPM_BUILD_ROOT/var/lib/mpd/mpd.db
 touch $RPM_BUILD_ROOT/var/lib/mpd/mpdstate
