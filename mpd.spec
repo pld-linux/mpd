@@ -10,16 +10,17 @@ Summary:	Music Player Daemon
 Summary(hu.UTF-8):	Music Player Daemon
 Summary(pl.UTF-8):	Music Player Daemon - demon odtwarzający muzykę
 Name:		mpd
-Version:	0.19.14
-Release:	2
+Version:	0.19.15
+Release:	1
 License:	GPL v2+
 Group:		Applications/Multimedia
 Source0:	http://www.musicpd.org/download/mpd/0.19/%{name}-%{version}.tar.xz
-# Source0-md5:	9f99340ec6b77bea4ba3729e3b76fd7c
+# Source0-md5:	bb855b1689c9e863c2dd214ab1cb9344
 Source1:	%{name}.conf
 Source2:	%{name}.init
 Source3:	%{name}.sysconfig
 Source4:	%{name}.tmpfiles
+Source5:	tags.xml
 Patch0:		%{name}-mpcsv8.patch
 URL:		http://www.musicpd.org/
 BuildRequires:	OpenAL-devel
@@ -148,6 +149,8 @@ Dokumentacja do Music Player Daemon (MPD).
 %prep
 %setup -q
 %patch0 -p1
+mkdir doc/include
+cp -p %{SOURCE5} doc/include
 
 %build
 %{__aclocal} -I m4
