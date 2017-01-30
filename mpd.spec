@@ -10,12 +10,12 @@ Summary:	Music Player Daemon
 Summary(hu.UTF-8):	Music Player Daemon
 Summary(pl.UTF-8):	Music Player Daemon - demon odtwarzający muzykę
 Name:		mpd
-Version:	0.19.20
+Version:	0.20.3
 Release:	1
 License:	GPL v2+
 Group:		Applications/Multimedia
-Source0:	http://www.musicpd.org/download/mpd/0.19/%{name}-%{version}.tar.xz
-# Source0-md5:	e16e936ad70ee37403c9a7f4165cc743
+Source0:	http://www.musicpd.org/download/mpd/0.20/%{name}-%{version}.tar.xz
+# Source0-md5:	8b58fac75e64e2ae3c17deb705b8a510
 Source1:	%{name}.conf
 Source2:	%{name}.init
 Source3:	%{name}.sysconfig
@@ -55,6 +55,7 @@ BuildRequires:	libmad-devel
 BuildRequires:	libmms-devel >= 0.4
 BuildRequires:	libmodplug-devel
 BuildRequires:	libmpdclient-devel >= 2.2
+BuildRequires:	libmpg123-devel
 BuildRequires:	libnfs-devel
 BuildRequires:	libogg-devel
 BuildRequires:	libsamplerate-devel >= 0.1.3
@@ -73,7 +74,7 @@ BuildRequires:	pkgconfig >= 1:0.9.0
 BuildRequires:	rpmbuild(macros) >= 1.629-2
 BuildRequires:	shine-devel >= 3.1
 BuildRequires:	soxr-devel
-BuildRequires:	sqlite3-devel
+BuildRequires:	sqlite3-devel >= 3.7.3
 BuildRequires:	systemd-devel
 BuildRequires:	twolame-devel
 BuildRequires:	wavpack-devel
@@ -83,7 +84,28 @@ BuildRequires:	yajl-devel >= 2.0
 BuildRequires:	zlib-devel
 BuildRequires:	zziplib-devel >= 0.13
 Requires(post,preun,postun):	systemd-units >= 38
+Requires:	alsa-lib >= 0.9.0
+%{?with_audiofile:Requires:	audiofile >= 0.3}
+Requires:	curl-libs >= 7.18
+Requires:	faad2-libs >= 2.6.1-5
+Requires:	ffmpeg-libs >= 0.8.0
+Requires:	flac >= 1.2.0
+Requires:	fluidsynth >= 1.1
+Requires:	glib2 >= 1:2.28.0
+Requires:	jack-audio-connection-kit-libs >= 0.100
+Requires:	libao >= 0.8.3
+%{?with_mod:Requires:	libmikmod >= 3.1.7}
+Requires:	libmms >= 0.4
+Requires:	libmpdclient >= 2.2
+Requires:	libsamplerate >= 0.1.3
+Requires:	libsidplay2 >= 2.1.1-5
+Requires:	libsmbclient >= 0.2
+%{?with_pulseaudio:Requires:	pulseaudio-libs >= 0.9.16}
+Requires:	shine >= 3.1
+Requires:	sqlite3 >= 3.7.3
 Requires:	systemd-units >= 38
+Requires:	yajl >= 2.0
+Requires:	zziplib >= 0.13
 Provides:	group(mpd)
 Provides:	user(mpd)
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -283,7 +305,7 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS INSTALL NEWS README doc/mpdconf.example
+%doc AUTHORS INSTALL NEWS README.md doc/mpdconf.example
 %attr(755,root,root) %{_bindir}/*
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/mpd.conf
 %attr(754,root,root) /etc/rc.d/init.d/mpd
