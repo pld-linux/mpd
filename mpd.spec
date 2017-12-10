@@ -2,16 +2,15 @@
 # - add logrotate
 #
 # Conditional build:
-%bcond_without	mod		# enable MOD support
-%bcond_without	pulseaudio	# disable PulseAudio support
+%bcond_without	mod		# MOD support via libmikmod
+%bcond_without	pulseaudio	# PulseAudio support
 %bcond_without	audiofile	# Audiofile support (WAV and others)
 
 Summary:	Music Player Daemon
-Summary(hu.UTF-8):	Music Player Daemon
 Summary(pl.UTF-8):	Music Player Daemon - demon odtwarzający muzykę
 Name:		mpd
 Version:	0.20.12
-Release:	1
+Release:	2
 License:	GPL v2+
 Group:		Applications/Multimedia
 Source0:	http://www.musicpd.org/download/mpd/0.20/%{name}-%{version}.tar.xz
