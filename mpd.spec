@@ -243,7 +243,8 @@ GME_CFLAGS="-I/usr/include/gme" GME_LIBS="-lgme" \
 	--enable-zzip \
 	--with-zeroconf=avahi \
 	--without-tremor \
-	--with-systemdsystemunitdir=%{systemdunitdir}
+	--with-systemdsystemunitdir=%{systemdunitdir} \
+	--with-systemduserunitdir=%{systemduserunitdir}
 %{__make}
 
 %install
@@ -312,6 +313,7 @@ fi
 %{systemdtmpfilesdir}/%{name}.conf
 %{systemdunitdir}/mpd.service
 %{systemdunitdir}/mpd.socket
+%{systemduserunitdir}/mpd.service
 %dir %attr(770,root,mpd) /var/lib/%{name}
 %dir %attr(770,root,mpd) /var/lib/%{name}/playlists
 %dir %attr(751,root,root) /var/log/%{name}
