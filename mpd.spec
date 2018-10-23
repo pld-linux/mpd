@@ -9,12 +9,12 @@
 Summary:	Music Player Daemon
 Summary(pl.UTF-8):	Music Player Daemon - demon odtwarzający muzykę
 Name:		mpd
-Version:	0.20.21
+Version:	0.20.22
 Release:	1
 License:	GPL v2+
 Group:		Applications/Multimedia
 Source0:	http://www.musicpd.org/download/mpd/0.20/%{name}-%{version}.tar.xz
-# Source0-md5:	d93c3c86f5e0fc56cc2e1020f80f8b66
+# Source0-md5:	6acee2bc5b30f6c97fdaf46682b0116c
 Source1:	%{name}.conf
 Source2:	%{name}.init
 Source3:	%{name}.sysconfig
@@ -82,6 +82,7 @@ BuildRequires:	xmlto
 BuildRequires:	yajl-devel >= 2.0
 BuildRequires:	zlib-devel
 BuildRequires:	zziplib-devel >= 0.13
+Requires(post,postun):	gtk-update-icon-cache
 Requires(post,preun,postun):	systemd-units >= 38
 Requires:	alsa-lib >= 0.9.0
 %{?with_audiofile:Requires:	audiofile >= 0.3}
@@ -91,6 +92,7 @@ Requires:	ffmpeg-libs >= 0.8.0
 Requires:	flac >= 1.2.0
 Requires:	fluidsynth >= 1.1
 Requires:	glib2 >= 1:2.28.0
+Requires:	hicolor-icon-theme
 Requires:	jack-audio-connection-kit-libs >= 0.100
 Requires:	libao >= 0.8.3
 %{?with_mod:Requires:	libmikmod >= 3.1.7}
@@ -285,6 +287,7 @@ for f in mpd.log; do
 done
 /sbin/chkconfig --add mpd
 %systemd_post %{name}.service %{name}.socket
+%update_icon_cache hicolor
 
 %preun
 if [ "$1" = "0" ]; then
@@ -299,6 +302,7 @@ if [ "$1" = "0" ]; then
 	%groupremove mpd
 fi
 %systemd_reload
+%update_icon_cache hicolor
 
 %triggerpostun -- %{name} < 0.16.6-1
 %systemd_trigger %{name}.service
@@ -322,6 +326,7 @@ fi
 %attr(644,mpd,mpd) %ghost /var/lib/%{name}/mpdstate
 %attr(644,mpd,mpd) %ghost /var/lib/%{name}/sticker.sql
 %attr(644,mpd,mpd) %ghost /var/log/%{name}/mpd.log
+%{_iconsdir}/hicolor/scalable/apps/mpd.svg
 %{_mandir}/man1/mpd.1*
 %{_mandir}/man5/mpd.conf.5*
 
