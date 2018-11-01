@@ -9,53 +9,50 @@
 Summary:	Music Player Daemon
 Summary(pl.UTF-8):	Music Player Daemon - demon odtwarzający muzykę
 Name:		mpd
-Version:	0.20.23
+Version:	0.21
 Release:	1
 License:	GPL v2+
 Group:		Applications/Multimedia
-Source0:	http://www.musicpd.org/download/mpd/0.20/%{name}-%{version}.tar.xz
-# Source0-md5:	a722432b53af45413d9b405b2e8e831f
+Source0:	http://www.musicpd.org/download/mpd/0.21/%{name}-%{version}.tar.xz
+# Source0-md5:	7a5bf4c4ea5b4fa03b8485608db371a7
 Source1:	%{name}.conf
 Source2:	%{name}.init
 Source3:	%{name}.sysconfig
 Source4:	%{name}.tmpfiles
-Patch0:		%{name}-mpcsv8.patch
 URL:		http://www.musicpd.org/
 BuildRequires:	OpenAL-devel
 BuildRequires:	adplug-devel
 BuildRequires:	alsa-lib-devel >= 0.9.0
 %{?with_audiofile:BuildRequires:	audiofile-devel >= 0.3}
-BuildRequires:	autoconf >= 2.60
-BuildRequires:	automake >= 1:1.11
 BuildRequires:	avahi-devel
-BuildRequires:	boost-devel >= 1.54
+BuildRequires:	boost-devel >= 1.58
 BuildRequires:	bzip2-devel
 BuildRequires:	curl-devel >= 7.18
 BuildRequires:	dbus-devel
 BuildRequires:	doxygen
 BuildRequires:	expat-devel
 BuildRequires:	faad2-devel >= 2.6.1-5
-BuildRequires:	ffmpeg-devel >= 0.8.0
+BuildRequires:	ffmpeg-devel >= 2.4.0
 BuildRequires:	flac-devel >= 1.2.0
 BuildRequires:	fluidsynth-devel >= 1.1
 BuildRequires:	game-music-emu-devel
-BuildRequires:	gcc >= 6:4.7
+BuildRequires:	gcc >= 6:5
 BuildRequires:	glib2-devel >= 1:2.28.0
 BuildRequires:	jack-audio-connection-kit-devel >= 0.100
 BuildRequires:	lame-libs-devel
 BuildRequires:	libao-devel >= 0.8.3
 BuildRequires:	libcdio-devel
-BuildRequires:	libcdio-paranoia-devel
+BuildRequires:	libcdio-paranoia-devel >= 0.4
 BuildRequires:	libcue-devel
-BuildRequires:	libicu-devel
+BuildRequires:	libicu-devel >= 50
 BuildRequires:	libid3tag-devel
 BuildRequires:	libmad-devel
-%{?with_mod:BuildRequires:	libmikmod-devel >= 3.1.7}
+%{?with_mod:BuildRequires:	libmikmod-devel >= 3.2}
 BuildRequires:	libmms-devel >= 0.4
 BuildRequires:	libmodplug-devel
-BuildRequires:	libmpdclient-devel >= 2.2
+BuildRequires:	libmpdclient-devel >= 2.9
 BuildRequires:	libmpg123-devel
-BuildRequires:	libnfs-devel
+BuildRequires:	libnfs-devel >= 1.11
 BuildRequires:	libogg-devel
 BuildRequires:	libsamplerate-devel >= 0.1.3
 BuildRequires:	libshout-devel
@@ -66,13 +63,16 @@ BuildRequires:	libstdc++-devel >= 0.2
 BuildRequires:	libupnp-devel
 BuildRequires:	libvorbis-devel
 BuildRequires:	libwrap-devel
+BuildRequires:	meson >= 0.47
 BuildRequires:	musepack-devel
+BuildRequires:	ninja
 BuildRequires:	opus-devel
 BuildRequires:	pkgconfig >= 1:0.9.0
 %{?with_pulseaudio:BuildRequires:	pulseaudio-devel >= 0.9.16}
-BuildRequires:	rpmbuild(macros) >= 1.629-2
+BuildRequires:	rpmbuild(macros) >= 1.727
 BuildRequires:	shine-devel >= 3.1
 BuildRequires:	soxr-devel
+BuildRequires:	sphinx-pdg
 BuildRequires:	sqlite3-devel >= 3.7.3
 BuildRequires:	systemd-devel
 BuildRequires:	twolame-devel
@@ -88,16 +88,19 @@ Requires:	alsa-lib >= 0.9.0
 %{?with_audiofile:Requires:	audiofile >= 0.3}
 Requires:	curl-libs >= 7.18
 Requires:	faad2-libs >= 2.6.1-5
-Requires:	ffmpeg-libs >= 0.8.0
+Requires:	ffmpeg-libs >= 2.4.0
 Requires:	flac >= 1.2.0
 Requires:	fluidsynth >= 1.1
 Requires:	glib2 >= 1:2.28.0
 Requires:	hicolor-icon-theme
 Requires:	jack-audio-connection-kit-libs >= 0.100
 Requires:	libao >= 0.8.3
-%{?with_mod:Requires:	libmikmod >= 3.1.7}
+Requires:	libcdio-paranoia >= 0.4
+Requires:	libicu >= 50
+%{?with_mod:Requires:	libmikmod >= 3.2}
 Requires:	libmms >= 0.4
-Requires:	libmpdclient >= 2.2
+Requires:	libmpdclient >= 2.9
+Requires:	libnfs >= 1.11
 Requires:	libsamplerate >= 0.1.3
 Requires:	libsidplay2 >= 2.1.1-5
 Requires:	libsmbclient >= 0.2
@@ -136,26 +139,13 @@ w sieci lokalnej. Służy także za dobry odtwarzacz muzyki dla
 komputerów biurkowych, zwłaszcza dla miłośników konsoli, różnych opcji
 frontendów albo często restartujących X.
 
-%package apidocs
-Summary:	MPD API documentation
-Summary(pl.UTF-8):	Dokumentacja API biblioteki API
-Group:		Documentation
-%if "%{_rpmversion}" >= "5"
-BuildArch:	noarch
-%endif
-
-%description apidocs
-API and internal documentation for MPD library.
-
-%description apidocs -l pl.UTF-8
-Dokumentacja API biblioteki MPD.
-
 %package doc
 Summary:	Documentation for Music Player Daemon (MPD)
 Summary(fr.UTF-8):	Documentation pour Music Player Daemon (MPD)
 Summary(it.UTF-8):	Documentazione di Music Player Daemon (MPD)
 Summary(pl.UTF-8):	Podręcznik dla Music Player Daemon (MPD)
 Group:		Documentation
+Obsoletes:	mpd-apidocs < 0.21
 
 %description doc
 Documentation for Music Player Daemon (MPD).
@@ -171,83 +161,74 @@ Dokumentacja do Music Player Daemon (MPD).
 
 %prep
 %setup -q
-%patch0 -p1
 
 %build
-%{__aclocal} -I m4
-%{__autoconf}
-%{__autoheader}
-%{__automake}
-# ac_cv_* hacks to avoid unwanted linking
-GME_CFLAGS="-I/usr/include/gme" GME_LIBS="-lgme" \
-%configure \
-	ac_cv_lib_iconv_main=no \
-	ac_cv_lib_nsl_gethostbyname=no \
-	%{!?with_pulseaudio:--disable-pulse} \
-	%{?with_mod:--enable-mikmod} \
-	--enable-adplug \
-	--enable-alsa \
-	--enable-ao \
-	%{?with_audiofile:--enable-audiofile} \
-	--enable-bzip2 \
-	--enable-cdio-paranoia \
-	--enable-curl \
-	--enable-database \
-	--enable-documentation \
-	--enable-dsd \
-	--enable-expat \
-	--enable-ffmpeg \
-	--enable-fifo \
-	--enable-flac \
-	--enable-fluidsynth \
-	--enable-gme \
-	--enable-httpd-output \
-	--enable-icu \
-	--enable-id3 \
-	--enable-inotify \
-	--enable-ipv6 \
-	--enable-iso9660 \
-	--enable-jack \
-	--enable-lame-encoder \
-	--enable-libmpdclient \
-	--enable-libwrap \
-	--enable-lsr \
-	--enable-mad \
-	--enable-mikmod \
-	--enable-mms \
-	--enable-modplug \
-	--enable-mpc \
-	--enable-nfs \
-	--enable-openal \
-	--enable-opus \
-	--enable-oss \
-	--enable-pipe-output \
-	--enable-recorder-output \
-	--enable-sidplay \
-	--enable-shine-encoder \
-	--enable-shout \
-	--enable-smbclient \
-	--enable-sndfile \
-	--enable-soundcloud \
-	--enable-soxr \
-	--enable-sqlite \
-	--enable-systemd-daemon \
-	--enable-tcp \
-	--enable-twolame-encoder \
-	--enable-upnp \
-	--enable-un \
-	--enable-vorbis \
-	--enable-vorbis-encoder \
-	--enable-wave-encoder \
-	--enable-wavpack \
-	--enable-wildmidi \
-	--enable-zlib \
-	--enable-zzip \
-	--with-zeroconf=avahi \
-	--without-tremor \
-	--with-systemdsystemunitdir=%{systemdunitdir} \
-	--with-systemduserunitdir=%{systemduserunitdir}
-%{__make}
+%meson build \
+	-Dpulse=%{?with_pulseaudio:enabled}%{!?with_pulseaudio:disabled} \
+	-Dmikmod=%{?with_mod:enabled}%{!?with_mod:disabled} \
+	-Dadplug=enabled \
+	-Dalsa=enabled \
+	-Dao=enabled \
+	-Daudiofile=%{?with_audiofile:enabled}%{!?with_audiofile:disabled} \
+	-Dbzip2=enabled \
+	-Dcdio-paranoia=enabled \
+	-Dcurl=enabled \
+	-Ddatabase=true \
+	-Ddocumentation=true \
+	-Ddsd=true \
+	-Dexpat=enabled \
+	-Dffmpeg=enabled \
+	-Dfifo=true \
+	-Dflac=enabled \
+	-Dfluidsynth=enabled \
+	-Dgme=enabled \
+	-Dhttpd=true \
+	-Dicu=enabled \
+	-Did3=enabled \
+	-Dinotify=true \
+	-Dipv6=enabled \
+	-Diso9660=enabled \
+	-Djack=enabled \
+	-Dlame-encoder=enabled \
+	-Dlibmpdclient=enabled \
+	-Dlibwrap=enabled \
+	-Dlsr=enabled \
+	-Dmad=enabled \
+	-Dmikmod=enabled \
+	-Dmms=enabled \
+	-Dmodplug=enabled \
+	-Dmpcdec=disabled \
+	-Dnfs=enabled \
+	-Dopenal=enabled \
+	-Dopus=enabled \
+	-Doss=enabled \
+	-Dpipe=true \
+	-Drecorder=true \
+	-Dsidplay=enabled \
+	-Dshine-encoder=enabled \
+	-Dshout=enabled \
+	-Dsmbclient=enabled \
+	-Dsndfile=enabled \
+	-Dsoundcloud=enabled \
+	-Dsoxr=enabled \
+	-Dsqlite=enabled \
+	-Ddaemon=true \
+	-Dsystemd=enabled \
+	-Dtcp=true \
+	-Dtwolame-encoder=enabled \
+	-Dupnp=enabled \
+	-Dun=enabled \
+	-Dvorbis=enabled \
+	-Dvorbis-encoder=enabled \
+	-Dwave_encoder=true \
+	-Dwavpack=enabled \
+	-Dwildmidi=enabled \
+	-Dzlib=enabled \
+	-Dzzip=enabled \
+	-Dzeroconf=avahi \
+	-Dsystemd_system_unit_dir=%{systemdunitdir} \
+	-Dsystemd_user_unit_dir=%{systemduserunitdir}
+%meson_build -C build
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -255,8 +236,7 @@ install -d $RPM_BUILD_ROOT{%{_sysconfdir},/etc/{rc.d/init.d,sysconfig}} \
 	$RPM_BUILD_ROOT{/var/lib/mpd/playlists,/var/log/mpd,/var/run/mpd} \
 	$RPM_BUILD_ROOT%{systemdtmpfilesdir}
 
-%{__make} install \
-	DESTDIR=$RPM_BUILD_ROOT
+%meson_install -C build
 
 cp -p %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}
 install -p %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/mpd
@@ -332,8 +312,4 @@ fi
 
 %files doc
 %defattr(644,root,root,755)
-%doc doc/user/*
-
-%files apidocs
-%defattr(644,root,root,755)
-%doc doc/api doc/developer doc/protocol
+%doc build/doc/html
