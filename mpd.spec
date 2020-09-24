@@ -9,12 +9,12 @@
 Summary:	Music Player Daemon
 Summary(pl.UTF-8):	Music Player Daemon - demon odtwarzający muzykę
 Name:		mpd
-Version:	0.21.26
+Version:	0.22
 Release:	1
 License:	GPL v2+
 Group:		Applications/Multimedia
-Source0:	http://www.musicpd.org/download/mpd/0.21/%{name}-%{version}.tar.xz
-# Source0-md5:	ce126f68fbd2345c81a1bb96cff7389d
+Source0:	http://www.musicpd.org/download/mpd/0.22/%{name}-%{version}.tar.xz
+# Source0-md5:	76b247b8e20e62ba45e0b32acb5d0976
 Source1:	%{name}.conf
 Source2:	%{name}.init
 Source3:	%{name}.sysconfig
@@ -27,7 +27,7 @@ BuildRequires:	alsa-lib-devel >= 0.9.0
 BuildRequires:	avahi-devel
 BuildRequires:	boost-devel >= 1.58
 BuildRequires:	bzip2-devel
-BuildRequires:	curl-devel >= 7.18
+BuildRequires:	curl-devel >= 7.33
 BuildRequires:	dbus-devel
 BuildRequires:	doxygen
 BuildRequires:	expat-devel
@@ -36,14 +36,14 @@ BuildRequires:	ffmpeg-devel >= 2.4.0
 BuildRequires:	flac-devel >= 1.2.0
 BuildRequires:	fluidsynth-devel >= 1.1
 BuildRequires:	game-music-emu-devel
-BuildRequires:	gcc >= 6:5
+BuildRequires:	gcc >= 6:8
 BuildRequires:	glib2-devel >= 1:2.28.0
 BuildRequires:	jack-audio-connection-kit-devel >= 0.100
 BuildRequires:	lame-libs-devel
 BuildRequires:	libao-devel >= 0.8.3
 BuildRequires:	libcdio-devel
-BuildRequires:	libcdio-paranoia-devel >= 0.4
-BuildRequires:	libcue-devel
+BuildRequires:	libcdio-paranoia-devel >= 0.93
+BuildRequires:	libchromaprint-devel
 BuildRequires:	libicu-devel >= 50
 BuildRequires:	libid3tag-devel
 BuildRequires:	libmad-devel
@@ -56,17 +56,18 @@ BuildRequires:	libnfs-devel >= 1.11
 BuildRequires:	libogg-devel
 BuildRequires:	libsamplerate-devel >= 0.1.3
 BuildRequires:	libshout-devel
-BuildRequires:	libsidplay2-devel >= 2.1.1-5
+BuildRequires:	libsidplayfp-devel >= 1.8
 BuildRequires:	libsmbclient-devel >= 0.2
 BuildRequires:	libsndfile-devel
-BuildRequires:	libstdc++-devel >= 0.2
-BuildRequires:	libupnp-devel
+BuildRequires:	libstdc++-devel
+BuildRequires:	libupnp-devel >= 1.8
+BuildRequires:	liburing-devel
 BuildRequires:	libvorbis-devel
-BuildRequires:	libwrap-devel
 BuildRequires:	meson >= 0.49.0
 BuildRequires:	musepack-devel
 BuildRequires:	ninja
 BuildRequires:	opus-devel
+BuildRequires:	pcre-devel
 BuildRequires:	pkgconfig >= 1:0.9.0
 %{?with_pulseaudio:BuildRequires:	pulseaudio-devel >= 0.9.16}
 BuildRequires:	rpmbuild(macros) >= 1.727
@@ -86,7 +87,7 @@ Requires(post,postun):	gtk-update-icon-cache
 Requires(post,preun,postun):	systemd-units >= 38
 Requires:	alsa-lib >= 0.9.0
 %{?with_audiofile:Requires:	audiofile >= 0.3}
-Requires:	curl-libs >= 7.18
+Requires:	curl-libs >= 7.33
 Requires:	faad2-libs >= 2.6.1-5
 Requires:	ffmpeg-libs >= 2.4.0
 Requires:	flac >= 1.2.0
@@ -95,15 +96,16 @@ Requires:	glib2 >= 1:2.28.0
 Requires:	hicolor-icon-theme
 Requires:	jack-audio-connection-kit-libs >= 0.100
 Requires:	libao >= 0.8.3
-Requires:	libcdio-paranoia >= 0.4
+Requires:	libcdio-paranoia >= 0.93
 Requires:	libicu >= 50
 %{?with_mod:Requires:	libmikmod >= 3.2}
 Requires:	libmms >= 0.4
 Requires:	libmpdclient >= 2.9
 Requires:	libnfs >= 1.11
 Requires:	libsamplerate >= 0.1.3
-Requires:	libsidplay2 >= 2.1.1-5
+Requires:	libsidplayfp >= 1.8
 Requires:	libsmbclient >= 0.2
+Requires:	libupnp >= 1.8
 %{?with_pulseaudio:Requires:	pulseaudio-libs >= 0.9.16}
 Requires:	shine >= 3.1
 Requires:	sqlite3 >= 3.7.3
@@ -171,10 +173,10 @@ Dokumentacja do Music Player Daemon (MPD).
 	-Dao=enabled \
 	-Daudiofile=%{?with_audiofile:enabled}%{!?with_audiofile:disabled} \
 	-Dbzip2=enabled \
-	-Dcdio-paranoia=enabled \
+	-Dcdio_paranoia=enabled \
 	-Dcurl=enabled \
 	-Ddatabase=true \
-	-Ddocumentation=true \
+	-Ddocumentation=enabled \
 	-Ddsd=true \
 	-Dexpat=enabled \
 	-Dffmpeg=enabled \
@@ -184,15 +186,14 @@ Dokumentacja do Music Player Daemon (MPD).
 	-Dgme=enabled \
 	-Dhttpd=true \
 	-Dicu=enabled \
-	-Did3=enabled \
+	-Did3tag=enabled \
 	-Dinotify=true \
+	-Dio_uring=enabled \
 	-Dipv6=enabled \
 	-Diso9660=enabled \
 	-Djack=enabled \
-	-Dlame-encoder=enabled \
+	-Dlame=enabled \
 	-Dlibmpdclient=enabled \
-	-Dlibwrap=enabled \
-	-Dlsr=enabled \
 	-Dmad=enabled \
 	-Dmikmod=enabled \
 	-Dmms=enabled \
@@ -205,7 +206,7 @@ Dokumentacja do Music Player Daemon (MPD).
 	-Dpipe=true \
 	-Drecorder=true \
 	-Dsidplay=enabled \
-	-Dshine-encoder=enabled \
+	-Dshine=enabled \
 	-Dshout=enabled \
 	-Dsmbclient=enabled \
 	-Dsndfile=enabled \
@@ -215,11 +216,10 @@ Dokumentacja do Music Player Daemon (MPD).
 	-Ddaemon=true \
 	-Dsystemd=enabled \
 	-Dtcp=true \
-	-Dtwolame-encoder=enabled \
+	-Dtwolame=enabled \
 	-Dupnp=enabled \
-	-Dun=enabled \
 	-Dvorbis=enabled \
-	-Dvorbis-encoder=enabled \
+	-Dvorbisenc=enabled \
 	-Dwave_encoder=true \
 	-Dwavpack=enabled \
 	-Dwildmidi=enabled \
