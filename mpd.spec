@@ -76,10 +76,12 @@ BuildRequires:	soxr-devel
 BuildRequires:	sphinx-pdg
 BuildRequires:	sqlite3-devel >= 3.7.3
 BuildRequires:	systemd-devel
+BuildRequires:	tar >= 1:1.22
 BuildRequires:	twolame-devel
 BuildRequires:	wavpack-devel
 BuildRequires:	wildmidi-devel
 BuildRequires:	xmlto
+BuildRequires:	xz
 BuildRequires:	yajl-devel >= 2.0
 BuildRequires:	zlib-devel
 BuildRequires:	zziplib-devel >= 0.13
