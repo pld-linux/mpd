@@ -70,7 +70,7 @@ BuildRequires:	opus-devel
 BuildRequires:	pcre-devel
 BuildRequires:	pkgconfig >= 1:0.9.0
 %{?with_pulseaudio:BuildRequires:	pulseaudio-devel >= 0.9.16}
-BuildRequires:	rpmbuild(macros) >= 1.727
+BuildRequires:	rpmbuild(macros) >= 1.736
 BuildRequires:	shine-devel >= 3.1
 BuildRequires:	soxr-devel
 BuildRequires:	sphinx-pdg
@@ -230,7 +230,7 @@ Dokumentacja do Music Player Daemon (MPD).
 	-Dzeroconf=avahi \
 	-Dsystemd_system_unit_dir=%{systemdunitdir} \
 	-Dsystemd_user_unit_dir=%{systemduserunitdir}
-%meson_build -C build
+%ninja_build -C build
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -238,7 +238,7 @@ install -d $RPM_BUILD_ROOT{%{_sysconfdir},/etc/{rc.d/init.d,sysconfig}} \
 	$RPM_BUILD_ROOT{/var/lib/mpd/playlists,/var/log/mpd,/var/run/mpd} \
 	$RPM_BUILD_ROOT%{systemdtmpfilesdir}
 
-%meson_install -C build
+%ninja_install -C build
 
 cp -p %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}
 install -p %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/mpd
