@@ -13,7 +13,7 @@ Version:	0.22.5
 Release:	1
 License:	GPL v2+
 Group:		Applications/Multimedia
-Source0:	http://www.musicpd.org/download/mpd/0.22/%{name}-%{version}.tar.xz
+Source0:	https://www.musicpd.org/download/mpd/0.22/%{name}-%{version}.tar.xz
 # Source0-md5:	d78d10e780cb7e4866bff2d6b04226d4
 Source1:	%{name}.conf
 Source2:	%{name}.init
