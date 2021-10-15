@@ -9,16 +9,17 @@
 Summary:	Music Player Daemon
 Summary(pl.UTF-8):	Music Player Daemon - demon odtwarzający muzykę
 Name:		mpd
-Version:	0.22.11
+Version:	0.23
 Release:	1
 License:	GPL v2+
 Group:		Applications/Multimedia
-Source0:	https://www.musicpd.org/download/mpd/0.22/%{name}-%{version}.tar.xz
-# Source0-md5:	26e0555e2a7925e2fd7cff90d7ecf27b
+Source0:	https://www.musicpd.org/download/mpd/0.23/%{name}-%{version}.tar.xz
+# Source0-md5:	103db74cc275ec0f7e5b7503cfd80131
 Source1:	%{name}.conf
 Source2:	%{name}.init
 Source3:	%{name}.sysconfig
 Source4:	%{name}.tmpfiles
+Patch0:		smb.patch
 URL:		http://www.musicpd.org/
 BuildRequires:	OpenAL-devel
 BuildRequires:	adplug-devel
@@ -44,16 +45,18 @@ BuildRequires:	libao-devel >= 0.8.3
 BuildRequires:	libcdio-devel
 BuildRequires:	libcdio-paranoia-devel >= 0.93
 BuildRequires:	libchromaprint-devel
+BuildRequires:	libfmt-devel
 BuildRequires:	libicu-devel >= 50
 BuildRequires:	libid3tag-devel
 BuildRequires:	libmad-devel
 %{?with_mod:BuildRequires:	libmikmod-devel >= 3.2}
 BuildRequires:	libmms-devel >= 0.4
 BuildRequires:	libmodplug-devel
-BuildRequires:	libmpdclient-devel >= 2.9
+BuildRequires:	libmpdclient-devel >= 2.11
 BuildRequires:	libmpg123-devel >= 1.28.0
 BuildRequires:	libnfs-devel >= 1.11
 BuildRequires:	libogg-devel
+BuildRequires:	libopenmpt-devel >= 0.5
 BuildRequires:	libsamplerate-devel >= 0.1.3
 BuildRequires:	libshout-devel
 BuildRequires:	libsidplayfp-devel >= 1.8
@@ -63,11 +66,12 @@ BuildRequires:	libstdc++-devel
 BuildRequires:	libupnp-devel >= 1.8
 BuildRequires:	liburing-devel
 BuildRequires:	libvorbis-devel
-BuildRequires:	meson >= 0.49.0
+BuildRequires:	meson >= 0.56.0
 BuildRequires:	musepack-devel
 BuildRequires:	ninja
 BuildRequires:	opus-devel
 BuildRequires:	pcre-devel
+BuildRequires:	pipewire-devel >= 0.3
 BuildRequires:	pkgconfig >= 1:0.9.0
 %{?with_pulseaudio:BuildRequires:	pulseaudio-devel >= 0.9.16}
 BuildRequires:	rpmbuild(macros) >= 1.736
@@ -102,13 +106,15 @@ Requires:	libcdio-paranoia >= 0.93
 Requires:	libicu >= 50
 %{?with_mod:Requires:	libmikmod >= 3.2}
 Requires:	libmms >= 0.4
-Requires:	libmpdclient >= 2.9
+Requires:	libmpdclient >= 2.11
 Requires:	libmpg123 >= 1.28.0
 Requires:	libnfs >= 1.11
+Requires:	libopenmpt >= 0.5
 Requires:	libsamplerate >= 0.1.3
 Requires:	libsidplayfp >= 1.8
 Requires:	libsmbclient >= 0.2
 Requires:	libupnp >= 1.8
+Requires:	pipewire-libs >= 0.3
 %{?with_pulseaudio:Requires:	pulseaudio-libs >= 0.9.16}
 Requires:	shine >= 3.1
 Requires:	sqlite3 >= 3.7.3
@@ -166,6 +172,7 @@ Dokumentacja do Music Player Daemon (MPD).
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 %meson build \
@@ -220,7 +227,7 @@ Dokumentacja do Music Player Daemon (MPD).
 	-Dsystemd=enabled \
 	-Dtcp=true \
 	-Dtwolame=enabled \
-	-Dupnp=enabled \
+	-Dupnp=pupnp \
 	-Dvorbis=enabled \
 	-Dvorbisenc=enabled \
 	-Dwave_encoder=true \
