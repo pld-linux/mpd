@@ -10,7 +10,7 @@ Summary:	Music Player Daemon
 Summary(pl.UTF-8):	Music Player Daemon - demon odtwarzający muzykę
 Name:		mpd
 Version:	0.23.3
-Release:	1
+Release:	2
 License:	GPL v2+
 Group:		Applications/Multimedia
 Source0:	https://www.musicpd.org/download/mpd/0.23/%{name}-%{version}.tar.xz
@@ -73,6 +73,7 @@ BuildRequires:	pcre-devel
 BuildRequires:	pipewire-devel >= 0.3
 BuildRequires:	pkgconfig >= 1:0.9.0
 %{?with_pulseaudio:BuildRequires:	pulseaudio-devel >= 0.9.16}
+BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpmbuild(macros) >= 1.736
 BuildRequires:	shine-devel >= 3.1
 BuildRequires:	soxr-devel
@@ -88,7 +89,6 @@ BuildRequires:	xz
 BuildRequires:	yajl-devel >= 2.0
 BuildRequires:	zlib-devel
 BuildRequires:	zziplib-devel >= 0.13
-Requires(post,postun):	gtk-update-icon-cache
 Requires(post,preun,postun):	systemd-units >= 38
 Requires:	alsa-lib >= 0.9.0
 %{?with_audiofile:Requires:	audiofile >= 0.3}
@@ -98,7 +98,6 @@ Requires:	ffmpeg-libs >= 2.4.0
 Requires:	flac >= 1.2.0
 Requires:	fluidsynth >= 1.1
 Requires:	glib2 >= 1:2.28.0
-Requires:	hicolor-icon-theme
 Requires:	jack-audio-connection-kit-libs >= 0.100
 Requires:	libao >= 0.8.3
 Requires:	libcdio-paranoia >= 0.93
@@ -120,6 +119,7 @@ Requires:	sqlite3 >= 3.7.3
 Requires:	systemd-units >= 38
 Requires:	yajl >= 2.0
 Requires:	zziplib >= 0.13
+Suggests:	%{name}-icons
 Provides:	group(mpd)
 Provides:	user(mpd)
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -168,6 +168,20 @@ Documentazione di Music Player Daemon (MPD).
 
 %description doc -l pl.UTF-8
 Dokumentacja do Music Player Daemon (MPD).
+
+%package icons
+Summary:	Icon files for Music Player Daemon (MPD)
+Summary(pl.UTF-8):	Pliki ikon dla Music Player Daemon (MPD)
+Group:		Applications
+Requires(post,postun):	gtk-update-icon-cache
+Requires:	hicolor-icon-theme
+BuildArch:	noarch
+
+%description icons
+Documentation for Music Player Daemon (MPD).
+
+%description icons -l pl.UTF-8
+Pliki ikon dla Music Player Daemon (MPD).
 
 %prep
 %setup -q
@@ -275,6 +289,8 @@ for f in mpd.log; do
 done
 /sbin/chkconfig --add mpd
 %systemd_post %{name}.service %{name}.socket
+
+%post icons
 %update_icon_cache hicolor
 
 %preun
@@ -290,6 +306,8 @@ if [ "$1" = "0" ]; then
 	%groupremove mpd
 fi
 %systemd_reload
+
+%postun icons
 %update_icon_cache hicolor
 
 %triggerpostun -- %{name} < 0.16.6-1
@@ -315,10 +333,13 @@ fi
 %attr(644,mpd,mpd) %ghost /var/lib/%{name}/mpdstate
 %attr(644,mpd,mpd) %ghost /var/lib/%{name}/sticker.sql
 %attr(644,mpd,mpd) %ghost /var/log/%{name}/mpd.log
-%{_iconsdir}/hicolor/scalable/apps/mpd.svg
 %{_mandir}/man1/mpd.1*
 %{_mandir}/man5/mpd.conf.5*
 
 %files doc
 %defattr(644,root,root,755)
 %doc build/doc/html
+
+%files icons
+%defattr(644,root,root,755)
+%{_iconsdir}/hicolor/scalable/apps/mpd.svg
