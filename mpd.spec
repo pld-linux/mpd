@@ -10,7 +10,7 @@ Summary:	Music Player Daemon
 Summary(pl.UTF-8):	Music Player Daemon - demon odtwarzający muzykę
 Name:		mpd
 Version:	0.23.5
-Release:	1
+Release:	2
 License:	GPL v2+
 Group:		Applications/Multimedia
 Source0:	https://www.musicpd.org/download/mpd/0.23/%{name}-%{version}.tar.xz
@@ -74,7 +74,7 @@ BuildRequires:	pipewire-devel >= 0.3
 BuildRequires:	pkgconfig >= 1:0.9.0
 %{?with_pulseaudio:BuildRequires:	pulseaudio-devel >= 0.9.16}
 BuildRequires:	rpm-build >= 4.6
-BuildRequires:	rpmbuild(macros) >= 1.736
+BuildRequires:	rpmbuild(macros) >= 2.011
 BuildRequires:	shine-devel >= 3.1
 BuildRequires:	soxr-devel
 BuildRequires:	sphinx-pdg
@@ -89,7 +89,7 @@ BuildRequires:	xz
 BuildRequires:	yajl-devel >= 2.0
 BuildRequires:	zlib-devel
 BuildRequires:	zziplib-devel >= 0.13
-Requires(post,preun,postun):	systemd-units >= 38
+Requires(post,preun,postun):	systemd-units >= 250.1
 Requires:	alsa-lib >= 0.9.0
 %{?with_audiofile:Requires:	audiofile >= 0.3}
 Requires:	curl-libs >= 7.33
@@ -116,7 +116,7 @@ Requires:	pipewire-libs >= 0.3
 %{?with_pulseaudio:Requires:	pulseaudio-libs >= 0.9.16}
 Requires:	shine >= 3.1
 Requires:	sqlite3 >= 3.7.3
-Requires:	systemd-units >= 38
+Requires:	systemd-units >= 250.1
 Requires:	yajl >= 2.0
 Requires:	zziplib >= 0.13
 Suggests:	%{name}-icons
@@ -289,6 +289,7 @@ for f in mpd.log; do
 done
 /sbin/chkconfig --add mpd
 %systemd_post %{name}.service %{name}.socket
+%systemd_user_post %{name}.service %{name}.socket
 
 %post icons
 %update_icon_cache hicolor
@@ -299,6 +300,7 @@ if [ "$1" = "0" ]; then
 	/sbin/chkconfig --del mpd
 fi
 %systemd_preun %{name}.service %{name}.socket
+%systemd_user_preun %{name}.service %{name}.socket
 
 %postun
 if [ "$1" = "0" ]; then
