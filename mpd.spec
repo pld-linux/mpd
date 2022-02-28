@@ -89,7 +89,7 @@ BuildRequires:	xz
 BuildRequires:	yajl-devel >= 2.0
 BuildRequires:	zlib-devel
 BuildRequires:	zziplib-devel >= 0.13
-Requires(post,preun,postun):	systemd-units >= 250.1
+Requires(post,preun,postun):	systemd-units >= 1:250.1
 Requires:	alsa-lib >= 0.9.0
 %{?with_audiofile:Requires:	audiofile >= 0.3}
 Requires:	curl-libs >= 7.33
@@ -116,7 +116,7 @@ Requires:	pipewire-libs >= 0.3
 %{?with_pulseaudio:Requires:	pulseaudio-libs >= 0.9.16}
 Requires:	shine >= 3.1
 Requires:	sqlite3 >= 3.7.3
-Requires:	systemd-units >= 250.1
+Requires:	systemd-units >= 1:250.1
 Requires:	yajl >= 2.0
 Requires:	zziplib >= 0.13
 Suggests:	%{name}-icons
