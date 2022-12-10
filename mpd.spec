@@ -320,7 +320,7 @@ fi
 %defattr(644,root,root,755)
 %doc AUTHORS NEWS README.md doc/mpdconf.example
 %attr(755,root,root) %{_bindir}/*
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/mpd.conf
+%attr(640,root,mpd) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/mpd.conf
 %attr(754,root,root) /etc/rc.d/init.d/mpd
 %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/mpd
 %{systemdtmpfilesdir}/%{name}.conf
