@@ -9,12 +9,12 @@
 Summary:	Music Player Daemon
 Summary(pl.UTF-8):	Music Player Daemon - demon odtwarzający muzykę
 Name:		mpd
-Version:	0.23.12
-Release:	3
+Version:	0.23.13
+Release:	1
 License:	GPL v2+
 Group:		Applications/Multimedia
 Source0:	https://www.musicpd.org/download/mpd/0.23/%{name}-%{version}.tar.xz
-# Source0-md5:	47e8d8bc53d6a79f1226bc7813eefaad
+# Source0-md5:	b85558d0f36cf67d7b382c8482e3467e
 Source1:	%{name}.conf
 Source2:	%{name}.init
 Source3:	%{name}.sysconfig
@@ -35,7 +35,7 @@ BuildRequires:	faad2-devel >= 2.6.1-5
 BuildRequires:	ffmpeg-devel >= 2.4.0
 BuildRequires:	flac-devel >= 1.2.0
 BuildRequires:	fluidsynth-devel >= 1.1
-BuildRequires:	game-music-emu-devel
+BuildRequires:	game-music-emu-devel >= 0.6
 BuildRequires:	gcc >= 6:8
 BuildRequires:	glib2-devel >= 1:2.28.0
 BuildRequires:	jack-audio-connection-kit-devel >= 0.100
@@ -97,6 +97,7 @@ Requires:	faad2-libs >= 2.6.1-5
 Requires:	ffmpeg-libs >= 2.4.0
 Requires:	flac >= 1.2.0
 Requires:	fluidsynth >= 1.1
+Requires:	game-music-emu >= 0.6
 Requires:	glib2 >= 1:2.28.0
 Requires:	jack-audio-connection-kit-libs >= 0.100
 Requires:	libao >= 0.8.3
