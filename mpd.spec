@@ -158,6 +158,7 @@ Summary(it.UTF-8):	Documentazione di Music Player Daemon (MPD)
 Summary(pl.UTF-8):	Podręcznik dla Music Player Daemon (MPD)
 Group:		Documentation
 Obsoletes:	mpd-apidocs < 0.21
+BuildArch:	noarch
 
 %description doc
 Documentation for Music Player Daemon (MPD).
