@@ -75,7 +75,7 @@ BuildRequires:	pipewire-devel >= 0.3
 BuildRequires:	pkgconfig >= 1:0.9.0
 %{?with_pulseaudio:BuildRequires:	pulseaudio-devel >= 0.9.16}
 BuildRequires:	rpm-build >= 4.6
-BuildRequires:	rpmbuild(macros) >= 2.011
+BuildRequires:	rpmbuild(macros) >= 2.042
 BuildRequires:	shine-devel >= 3.1
 BuildRequires:	soxr-devel
 BuildRequires:	sphinx-pdg
@@ -191,7 +191,7 @@ Pliki ikon dla Music Player Daemon (MPD).
 %setup -q
 
 %build
-%meson build \
+%meson \
 	-Dpulse=%{?with_pulseaudio:enabled}%{!?with_pulseaudio:disabled} \
 	-Dmikmod=%{?with_mod:enabled}%{!?with_mod:disabled} \
 	-Dadplug=enabled \
@@ -254,7 +254,7 @@ Pliki ikon dla Music Player Daemon (MPD).
 	-Dzeroconf=avahi \
 	-Dsystemd_system_unit_dir=%{systemdunitdir} \
 	-Dsystemd_user_unit_dir=%{systemduserunitdir}
-%ninja_build -C build
+%meson_build
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -262,7 +262,7 @@ install -d $RPM_BUILD_ROOT{%{_sysconfdir},/etc/{rc.d/init.d,sysconfig}} \
 	$RPM_BUILD_ROOT{/var/lib/mpd/playlists,/var/log/mpd,/var/run/mpd} \
 	$RPM_BUILD_ROOT%{systemdtmpfilesdir}
 
-%ninja_install -C build
+%meson_install
 
 cp -p %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}
 install -p %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/mpd
