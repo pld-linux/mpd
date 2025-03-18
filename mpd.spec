@@ -9,12 +9,12 @@
 Summary:	Music Player Daemon
 Summary(pl.UTF-8):	Music Player Daemon - demon odtwarzający muzykę
 Name:		mpd
-Version:	0.23.17
-Release:	2
+Version:	0.24
+Release:	1
 License:	GPL v2+
 Group:		Applications/Multimedia
-Source0:	https://www.musicpd.org/download/mpd/0.23/%{name}-%{version}.tar.xz
-# Source0-md5:	4182e740600c233b308dddfddb379fc3
+Source0:	https://www.musicpd.org/download/mpd/0.24/%{name}-%{version}.tar.xz
+# Source0-md5:	fcd201bf3d95b74df1a2bb37d01b1dd7
 Source1:	%{name}.conf
 Source2:	%{name}.init
 Source3:	%{name}.sysconfig
@@ -22,17 +22,16 @@ Source4:	%{name}.tmpfiles
 URL:		http://www.musicpd.org/
 BuildRequires:	OpenAL-devel
 BuildRequires:	adplug-devel
-BuildRequires:	alsa-lib-devel >= 0.9.0
+BuildRequires:	alsa-lib-devel >= 1.2
 %{?with_audiofile:BuildRequires:	audiofile-devel >= 0.3}
 BuildRequires:	avahi-devel
-BuildRequires:	boost-devel >= 1.58
 BuildRequires:	bzip2-devel
 BuildRequires:	curl-devel >= 7.55.0
 BuildRequires:	dbus-devel
 BuildRequires:	doxygen
 BuildRequires:	expat-devel
 BuildRequires:	faad2-devel >= 2.6.1-5
-BuildRequires:	ffmpeg-devel >= 2.4.0
+BuildRequires:	ffmpeg-devel >= 4
 BuildRequires:	flac-devel >= 1.2.0
 BuildRequires:	fluidsynth-devel >= 1.1
 BuildRequires:	game-music-emu-devel >= 0.6
@@ -44,16 +43,15 @@ BuildRequires:	libao-devel >= 0.8.3
 BuildRequires:	libcdio-devel
 BuildRequires:	libcdio-paranoia-devel >= 0.93
 BuildRequires:	libchromaprint-devel
-BuildRequires:	libfmt-devel
+BuildRequires:	libfmt-devel >= 9
 BuildRequires:	libicu-devel >= 50
 BuildRequires:	libid3tag-devel
 BuildRequires:	libmad-devel
 %{?with_mod:BuildRequires:	libmikmod-devel >= 3.2}
 BuildRequires:	libmms-devel >= 0.4
 BuildRequires:	libmodplug-devel
-BuildRequires:	libmpdclient-devel >= 2.11
+BuildRequires:	libmpdclient-devel >= 2.15
 BuildRequires:	libmpg123-devel >= 1.28.0
-BuildRequires:	libnfs-devel < 6
 BuildRequires:	libnfs-devel >= 4
 BuildRequires:	libogg-devel
 BuildRequires:	libopenmpt-devel >= 0.5
@@ -62,11 +60,11 @@ BuildRequires:	libshout-devel >= 2.4.6
 BuildRequires:	libsidplayfp-devel >= 1.8
 BuildRequires:	libsmbclient-devel >= 0.2
 BuildRequires:	libsndfile-devel
-BuildRequires:	libstdc++-devel
+BuildRequires:	libstdc++-devel >= 6:12
 BuildRequires:	libupnp-devel >= 1.8
 BuildRequires:	liburing-devel
 BuildRequires:	libvorbis-devel
-BuildRequires:	meson >= 0.56.0
+BuildRequires:	meson >= 1.0
 BuildRequires:	musepack-devel
 BuildRequires:	ninja
 BuildRequires:	opus-devel
@@ -77,13 +75,13 @@ BuildRequires:	pkgconfig >= 1:0.9.0
 BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpmbuild(macros) >= 2.042
 BuildRequires:	shine-devel >= 3.1
-BuildRequires:	soxr-devel
+BuildRequires:	soxr-devel >= 0.1.2
 BuildRequires:	sphinx-pdg
 BuildRequires:	sqlite3-devel >= 3.7.3
 BuildRequires:	systemd-devel
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	twolame-devel
-BuildRequires:	wavpack-devel
+BuildRequires:	wavpack-devel >= 5
 BuildRequires:	wildmidi-devel
 BuildRequires:	xmlto
 BuildRequires:	xz
@@ -91,11 +89,11 @@ BuildRequires:	yajl-devel >= 2.0
 BuildRequires:	zlib-devel
 BuildRequires:	zziplib-devel >= 0.13
 Requires(post,preun,postun):	systemd-units >= 1:250.1
-Requires:	alsa-lib >= 0.9.0
+Requires:	alsa-lib >= 1.2
 %{?with_audiofile:Requires:	audiofile >= 0.3}
 Requires:	curl-libs >= 7.55.0
 Requires:	faad2-libs >= 2.6.1-5
-Requires:	ffmpeg-libs >= 2.4.0
+Requires:	ffmpeg-libs >= 4
 Requires:	flac >= 1.2.0
 Requires:	fluidsynth >= 1.1
 Requires:	game-music-emu >= 0.6
@@ -103,12 +101,13 @@ Requires:	glib2 >= 1:2.28.0
 Requires:	jack-audio-connection-kit-libs >= 0.100
 Requires:	libao >= 0.8.3
 Requires:	libcdio-paranoia >= 0.93
+Requires:	libfmt >= 9
 Requires:	libicu >= 50
 %{?with_mod:Requires:	libmikmod >= 3.2}
 Requires:	libmms >= 0.4
-Requires:	libmpdclient >= 2.11
+Requires:	libmpdclient >= 2.15
 Requires:	libmpg123 >= 1.28.0
-Requires:	libnfs >= 1.11
+Requires:	libnfs >= 4
 Requires:	libopenmpt >= 0.5
 Requires:	libsamplerate >= 0.1.3
 Requires:	libshout >= 2.4.6
@@ -118,8 +117,10 @@ Requires:	libupnp >= 1.8
 Requires:	pipewire-libs >= 0.3
 %{?with_pulseaudio:Requires:	pulseaudio-libs >= 0.9.16}
 Requires:	shine >= 3.1
+Requires:	soxr >= 0.1.2
 Requires:	sqlite3-libs >= 3.7.3
 Requires:	systemd-units >= 1:250.1
+Requires:	wavpack-libs >= 5
 Requires:	yajl >= 2.0
 Requires:	zziplib >= 0.13
 Suggests:	%{name}-icons
