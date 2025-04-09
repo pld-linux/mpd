@@ -9,12 +9,12 @@
 Summary:	Music Player Daemon
 Summary(pl.UTF-8):	Music Player Daemon - demon odtwarzający muzykę
 Name:		mpd
-Version:	0.24.2
+Version:	0.24.3
 Release:	1
 License:	GPL v2+
 Group:		Applications/Multimedia
 Source0:	https://www.musicpd.org/download/mpd/0.24/%{name}-%{version}.tar.xz
-# Source0-md5:	f9254fec0af681cd3f754bae188d0d60
+# Source0-md5:	6b1f1fb586421bcf0cc29ed0c22aed8d
 Source1:	%{name}.conf
 Source2:	%{name}.init
 Source3:	%{name}.sysconfig
@@ -62,11 +62,12 @@ BuildRequires:	libsmbclient-devel >= 0.2
 BuildRequires:	libsndfile-devel
 BuildRequires:	libstdc++-devel >= 6:12
 BuildRequires:	libupnp-devel >= 1.8
-BuildRequires:	liburing-devel
+BuildRequires:	liburing-devel >= 2.3
 BuildRequires:	libvorbis-devel
 BuildRequires:	meson >= 1.0
 BuildRequires:	musepack-devel
 BuildRequires:	ninja
+BuildRequires:	nlohmann-json-devel >= 3.11
 BuildRequires:	opus-devel
 BuildRequires:	pcre-devel
 BuildRequires:	pipewire-devel >= 0.3
@@ -85,7 +86,6 @@ BuildRequires:	wavpack-devel >= 5
 BuildRequires:	wildmidi-devel
 BuildRequires:	xmlto
 BuildRequires:	xz
-BuildRequires:	yajl-devel >= 2.0
 BuildRequires:	zlib-devel
 BuildRequires:	zziplib-devel >= 0.13
 Requires(post,preun,postun):	systemd-units >= 1:250.1
@@ -114,6 +114,7 @@ Requires:	libshout >= 2.4.6
 Requires:	libsidplayfp >= 1.8
 Requires:	libsmbclient >= 0.2
 Requires:	libupnp >= 1.8
+Requires:	liburing >= 2.3
 Requires:	pipewire-libs >= 0.3
 %{?with_pulseaudio:Requires:	pulseaudio-libs >= 0.9.16}
 Requires:	shine >= 3.1
@@ -121,7 +122,6 @@ Requires:	soxr >= 0.1.2
 Requires:	sqlite3-libs >= 3.7.3
 Requires:	systemd-units >= 1:250.1
 Requires:	wavpack-libs >= 5
-Requires:	yajl >= 2.0
 Requires:	zziplib >= 0.13
 Suggests:	%{name}-icons
 Provides:	group(mpd)
@@ -237,7 +237,6 @@ Pliki ikon dla Music Player Daemon (MPD).
 	-Dshout=enabled \
 	-Dsmbclient=enabled \
 	-Dsndfile=enabled \
-	-Dsoundcloud=enabled \
 	-Dsoxr=enabled \
 	-Dsqlite=enabled \
 	-Ddaemon=true \
