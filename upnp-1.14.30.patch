@@ -1,0 +1,20 @@
+--- mpd-0.24.9/src/lib/upnp/meson.build.orig	2026-03-11 11:54:28.000000000 +0100
++++ mpd-0.24.9/src/lib/upnp/meson.build	2026-03-11 13:34:51.467872649 +0100
+@@ -13,7 +13,7 @@
+ if upnp_option == 'auto'
+   upnp_dep = dependency('libupnp', version: '>= 1.8', required: false)
+ 
+-  if upnp_dep.found() and upnp_dep.version().version_compare('>= 1.14.26')
++  if upnp_dep.found() and upnp_dep.version().version_compare('>= 1.14.26') and upnp_dep.version().version_compare('!= 1.14.30')
+     warning('Your libupnp version is known to be broken, see https://github.com/pupnp/pupnp/issues/528 - disabling')
+     upnp_dep = dependency('', required: false)
+   endif
+@@ -25,7 +25,7 @@
+ elif upnp_option == 'pupnp'
+   upnp_dep = dependency('libupnp', version: '>= 1.8', required: true)
+ 
+-  if upnp_dep.found() and upnp_dep.version().version_compare('>= 1.14.26')
++  if upnp_dep.found() and upnp_dep.version().version_compare('>= 1.14.26') and upnp_dep.version().version_compare('!= 1.14.30')
+     error('Your libupnp version is known to be broken, see https://github.com/pupnp/pupnp/issues/528')
+   endif
+ 
