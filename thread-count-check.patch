@@ -1,18 +1,191 @@
---- mpd-0.24.9/src/Main.cxx.orig	2026-03-11 11:54:28.000000000 +0100
-+++ mpd-0.24.9/src/Main.cxx	2026-03-12 01:27:56.922373764 +0100
-@@ -695,15 +695,6 @@
- int
+--- mpd-0.24.9/meson.build.orig	2026-03-11 11:54:28.000000000 +0100
++++ mpd-0.24.9/meson.build	2026-03-12 23:33:53.445792279 +0100
+@@ -6,7 +6,7 @@
+   default_options: [
+     'c_std=c11',
+     'build.c_std=c11',
+-    'cpp_std=c++20',
++    'cpp_std=c++23',
+     'build.cpp_std=c++20',
+     'warning_level=3',
+ 
+diff --git a/src/Main.cxx b/src/Main.cxx
+index 6d494aebb..b19e0f3cf 100644
+--- a/src/Main.cxx
++++ b/src/Main.cxx
+@@ -698,7 +698,7 @@ int
  main(int argc, char *argv[]) noexcept
  try {
--#ifdef __linux__
+ #ifdef __linux__
 -	if (ProcStatusThreads() > 1)
--		/* threads created by libraries before main() can
--		   cause all sorts of bugs that are difficult to
--		   analyze; bail out quickly and refuse to run if we
--		   detect such a thing */
--		throw "Background threads were detected before MPD could initialize. This is likely caused by a misbehaving library. Aborting to prevent erroneous behavior. Please report.";
--#endif
--
- 	AtScopeExit() { log_deinit(); };
++	if (!ProcStatusThreadsCheck())
+ 		/* threads created by libraries before main() can
+ 		   cause all sorts of bugs that are difficult to
+ 		   analyze; bail out quickly and refuse to run if we
+diff --git a/src/io/linux/ProcStatus.cxx b/src/io/linux/ProcStatus.cxx
+index 3d8b9fc3f..fa7de315a 100644
+--- a/src/io/linux/ProcStatus.cxx
++++ b/src/io/linux/ProcStatus.cxx
+@@ -1,36 +1,143 @@
+ // SPDX-License-Identifier: BSD-2-Clause
+ // author: Max Kellermann <max.kellermann@gmail.com>
  
- #ifdef _WIN32
++#include <cstddef>
++#include <cstdint>
++#include <cinttypes>
++#include <cstdio>
++#include <cstring>
++#include <iostream>
++#include <ostream>
++#include <ranges>
++#include <signal.h>
++#include <string>
++#include <unistd.h>
++
+ #include "ProcStatus.hxx"
++#include "fs/AllocatedPath.hxx"
++#include "fs/DirectoryReader.hxx"
++#include "fs/Path.hxx"
+ #include "io/UniqueFileDescriptor.hxx"
+ #include "util/NumberParser.hxx"
+ #include "util/StringSplit.hxx"
+ 
+ using std::string_view_literals::operator""sv;
+ 
+-unsigned
+-ProcStatusThreads() noexcept
++// keep in sync
++typedef uint64_t mpd_sigmask_t;
++#define SCNMPDSIGMASK SCNx64
++
++static_assert(NSIG <= sizeof(mpd_sigmask_t) * 8 + 1, "mpd_sigmask_t is too small for all signals");
++
++bool
++ProcStatusThreadsCheck() noexcept
+ {
+ 	UniqueFileDescriptor fd;
+ 	if (!fd.OpenReadOnly("/proc/self/status"))
+-		return 0;
++		return true;
+ 
+ 	char buffer[4096];
+ 	ssize_t nbytes = fd.Read(std::as_writable_bytes(std::span{buffer}));
+ 	if (nbytes <= 0)
+-		return 0;
++		return true;
+ 
+ 	const std::string_view contents{buffer, static_cast<std::size_t>(nbytes)};
+ 
+ 	static constexpr std::string_view prefix = "\nThreads:\t"sv;
+ 	const auto position = contents.find(prefix);
+ 	if (position == contents.npos)
+-		return 0;
++		return true;
+ 
+ 	const std::string_view value_string = Split(contents.substr(position + prefix.size()), '\n').first;
+ 	unsigned value;
+ 	if (!ParseIntegerTo(value_string, value))
+-		return 0;
++		return true;
++
++	if (value == 1)
++		return true;
++
++	bool result = true;
++
++	sigset_t current_sigmask;
++	pthread_sigmask(SIG_SETMASK, NULL, &current_sigmask);
++
++	mpd_sigmask_t expected_blocked_mask = 0;
++	for (int sig = 1; sig < NSIG; sig++)
++		if (sig != SIGKILL && sig != SIGSTOP && (sig < 32 || sig >= SIGRTMIN)) {
++			expected_blocked_mask |= (((mpd_sigmask_t) 1) << (sig - 1));
++			int ret = sigismember(&current_sigmask, sig);
++			if (ret < 0)
++				return false;
++			else if (result && ret) {
++				std::cerr << "Blocked signal mask is not clean" << std::endl;
++				result = false;
++			}
++
++		}
++
++	try {
++		auto task_path = Path::FromFS("/proc/self/task");
++		DirectoryReader task_dir(task_path);
++		pid_t pid = getpid();
++
++		while (task_dir.ReadEntry()) {
++			auto entry = task_dir.GetEntry();
++
++			if (strcmp(".", entry.c_str()) == 0 || strcmp("..", entry.c_str()) == 0)
++				continue;
++
++			pid_t task_id;
++
++			if (!ParseIntegerTo(entry.c_str(), task_id)) [[unlikely]]
++				return false;
++
++			if (task_id == pid)
++				continue;
++
++			UniqueFileDescriptor status_fd;
++			if (!status_fd.OpenReadOnly((task_path / entry / Path::FromFS("status")).c_str()))
++				return false;
++
++			nbytes = status_fd.Read(std::as_writable_bytes(std::span{buffer}));
++			if (nbytes <= 0)
++				return false;
++
++			const std::string_view status_content{buffer, static_cast<std::size_t>(nbytes)};
++			static constexpr auto newline{"\n"sv};
++			static constexpr auto tab{"\t"sv};
++			std::string_view name;
++			mpd_sigmask_t task_blocked_mask = 0;
++			bool task_blocked_mask_found = false;
++
++			for (auto line : std::views::split(status_content, newline)) {
++				auto text = std::string_view(line);
++				if (text.starts_with("Name:\t")) {
++					auto pos = text.find(tab);
++					if (pos < text.size() - 1) [[likely]]
++						name = text.substr(pos + 1);
++				} else if (text.starts_with("SigBlk:\t")) {
++					auto pos = text.find(tab);
++					if (pos == text.size() - 1) [[unlikely]]
++						return false;
++					std::string text_value(text.substr(pos + 1));
++					sscanf(text_value.c_str(), "%" SCNMPDSIGMASK, &task_blocked_mask);
++					task_blocked_mask_found = true;
++				}
++
++				if (!name.empty() && task_blocked_mask_found)
++					break;
++			}
++
++			if (!task_blocked_mask_found || (task_blocked_mask & expected_blocked_mask) != expected_blocked_mask) {
++				std::cerr << "Found thread (" << name << ") without blocked signals" << std::endl;
++				result = false;
++			}
++
++		}
++
++		return result;
++	} catch (...) {
++		return false;
++	}
+ 
+-	return value;
+ }
+diff --git a/src/io/linux/ProcStatus.hxx b/src/io/linux/ProcStatus.hxx
+index ffe6bfc4c..722fd2799 100644
+--- a/src/io/linux/ProcStatus.hxx
++++ b/src/io/linux/ProcStatus.hxx
+@@ -9,5 +9,5 @@
+  * @return the number of threads or 0 on error
+  */
+ [[gnu::pure]]
+-unsigned
+-ProcStatusThreads() noexcept;
++bool
++ProcStatusThreadsCheck() noexcept;
