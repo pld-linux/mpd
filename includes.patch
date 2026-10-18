@@ -1,0 +1,10 @@
+--- mpd-0.24.16/src/neighbor/plugins/SmbclientNeighborPlugin.cxx.orig	2026-10-17 18:02:28.000000000 +0200
++++ mpd-0.24.16/src/neighbor/plugins/SmbclientNeighborPlugin.cxx	2026-10-18 15:09:30.012400138 +0200
+@@ -19,6 +19,7 @@
+ #include "util/AllocatedArray.hxx" // for the FixStringUTF8() return value
+ #include "Log.hxx"
+ 
++#include <fmt/format.h>
+ #include <libsmbclient.h>
+ 
+ #include <cerrno>
